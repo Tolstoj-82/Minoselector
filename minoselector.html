@@ -1,76 +1,9 @@
 <html>
   <head>
-    <style>
-        body{
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-        .container {
-            display: flex;
-        }
-
-        .vramgrid {
-            width: 600px;
-        }
-
-        .spacing {
-            width: 30px;
-        }
-
-        .playfieldgrid {
-            width: 400px;
-        }
-
-        .vramgrid {
-            display: grid;
-            grid-template-columns: repeat(16, 32px);
-            grid-template-rows: repeat(16, 32px);
-            gap: 0px;
-            width: fit-content;
-            height: fit-content;
-            border: 3px solid rgb(67, 67, 67);
-        }
-
-        .playfieldgrid {
-            display: grid;
-            grid-template-columns: repeat(10, 32px);
-            grid-template-rows: repeat(18, 32px);
-            gap: 0px;
-            width: fit-content;
-            height: fit-content;
-            border: 3px solid rgb(67, 67, 67);
-        }
-      
-        .cell, .playfieldcell {
-            width: 32px;
-            height: 32px;
-            border: 2px solid rgb(147, 147, 147);
-            background-size: cover;
-            box-sizing: border-box;
-        }
-        
-        .playfieldcell {
-            border-color: lightgray;
-        }
-        
-        .standard {
-            border: 2px solid rgb(117, 150, 252);
-        }
-
-        .selected {
-            border: 2px solid rgb(0, 255, 0);
-        }
-      
-        .cell:hover {
-            border: 2px solid rgb(240, 255, 24);
-        }
-
-        .noStack{
-            background-color: antiquewhite;
-        }
-
-    </style>
+    <link rel="stylesheet" href="style.css">
+    
   </head>
-  <body>
+  <body bgcolor="#333" align="center">
     <h1>Customize the initial garbage stack</h1>
     <div class="container">
         <div class="playfieldgrid"></div>
@@ -80,77 +13,8 @@
     <p><input type="checkbox" id="scales" name="Random values (standard)">Random values (0x80 - 0x87)</p> 
     <p><textarea readonly style="width:870px; height:200px;"></textarea></p>
     <p><button>&gt;&gt; Generate Playfield</button></p>
-    <p>TOLSTOJ and TONI 2023</p>
-    <script>
-
-        let currentMino;
-
-        function changeBg(id, toColor) {
-            let cell = document.getElementById(id);
-            let currentBg = cell.style.backgroundImage;
-
-            if (toColor == "green") {
-                let newBg = currentBg.replace("green", "grey");
-                cell.style.backgroundImage = newBg;
-            } else if (toColor == "grey") {
-                let newBg = currentBg.replace("grey", "green");
-                cell.style.backgroundImage = newBg;
-            }
-        }
-            
-        // When certain keys are pressed, select the corresponding cells
-        document.addEventListener("keydown", function(event) {
-            if ((event.keyCode >= 49 && event.keyCode <= 56) || (event.keyCode >= 65 && event.keyCode <= 90)) { 
-                let cell;
-                if(event.keyCode >= 49 && event.keyCode <= 56)
-                    cell = document.getElementById((event.keyCode-49+128).toString(16).padStart(2, "0"));
-                else 
-                    cell = document.getElementById((event.keyCode-65+10).toString(16).padStart(2, "0"));
-                document.querySelectorAll(".cell").forEach(function(c) {
-                    c.classList.remove("selected");
-                    changeBg(c.id, "green");
-                });
-                cell.classList.add("selected");
-                changeBg(cell.id, "grey");
-                currentMino = cell.id;
-            }
-        });
-
-
-        // Create the vram-grid
-        for (let i = 0; i < 256; i++) {
-            let hexId = i.toString(16).padStart(2, "0");
-            let cell = document.createElement("div");
-            cell.classList.add("cell");
-            if(i >= 128 && i <= 135){
-                cell.classList.add("standard");
-            }
-            cell.id = hexId;
-            cell.style.backgroundImage = 'url("images/grey/'+hexId+'.png")';
-            cell.onclick = function() {
-                document.querySelectorAll(".cell").forEach(function(c) {
-                    c.classList.remove("selected");
-                    changeBg(c.id, "green");
-                });
-                this.classList.add("selected");
-                changeBg(this.id, "grey");
-                currentMino = this.id;
-          };
-          document.querySelector(".vramgrid").appendChild(cell);
-        }
-
-        // Create playfield
-        for (let i = 0; i < 180; i++) {
-            let playfieldcell = document.createElement("div");
-            if(i < 80){
-                playfieldcell.classList.add("noStack");
-            }else{
-                playfieldcell.classList.add("stack");
-            }
-            playfieldcell.classList.add("playfieldcell");
-            document.querySelector(".playfieldgrid").appendChild(playfieldcell);
-        }
-      </script>
+    <p>TOLSTOJ and TONI 2023, with some help of -JJ</p>
     </div>
+    <script src="scripts.js"></script>
   </body>
 </html>

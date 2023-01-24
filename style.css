@@ -1,0 +1,81 @@
+body{
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: #FFF;
+}
+
+.container {
+    display: flex;
+    margin: auto;
+    width: fit-content;
+}
+
+.vramgrid {
+    width: 600px;
+}
+.spacing {
+    width: 30px;
+}
+.playfieldgrid {
+    width: 400px;
+}
+
+/* ----------------------------------------------------- 
+THE VRAM GRID
+ -----------------------------------------------------*/
+.vramgrid {
+    display: grid;
+    grid-template-columns: repeat(16, 32px);
+    grid-template-rows: repeat(16, 32px);
+    gap: 0px;
+    width: fit-content;
+    height: fit-content;
+    border: 3px solid #FFF;
+}
+
+/* ----------------------------------------------------- 
+THE PLAYFIELD GRID
+ -----------------------------------------------------*/
+.playfieldgrid {
+    display: grid;
+    grid-template-columns: repeat(10, 32px);
+    grid-template-rows: repeat(18, 32px);
+    gap: 0px;
+    width: fit-content;
+    height: fit-content;
+    border: 3px solid #FFF;
+}
+
+.cell, .playfieldcell {
+    width: 32px;
+    height: 32px;
+    border: 2px solid #999;
+    background-size: cover;
+    box-sizing: border-box;
+}
+
+.playfieldcell {
+    /*border-color: #FFF;*/
+    background-color: #ddd;
+}
+
+/* the minos that are normally used get a blue border */
+.standard {
+    border: 2px solid rgb(117, 150, 252);
+}
+
+/* ----------------------------------------------------- 
+the selected mino gets a green border
+the image is swapped in javascript
+ -----------------------------------------------------*/
+.selected {
+    border: 2px solid rgb(0, 255, 0);
+}
+
+/* hovering a mino gives a blue border */
+.cell:hover {
+    border: 2px solid rgb(240, 255, 24);
+}
+
+.noStack{
+    background-color: #555;
+}
