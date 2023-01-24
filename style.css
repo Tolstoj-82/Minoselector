@@ -20,12 +20,12 @@ body{
 }
 
 /* ----------------------------------------------------- 
-THE VRAM GRID
+(1) THE PLAYFIELD GRID
  -----------------------------------------------------*/
-.vramgrid {
+ .playfieldgrid {
     display: grid;
-    grid-template-columns: repeat(16, 32px);
-    grid-template-rows: repeat(16, 32px);
+    grid-template-columns: repeat(10, 32px);
+    grid-template-rows: repeat(18, 32px);
     gap: 0px;
     width: fit-content;
     height: fit-content;
@@ -33,12 +33,12 @@ THE VRAM GRID
 }
 
 /* ----------------------------------------------------- 
-THE PLAYFIELD GRID
+(2) THE VRAM GRID
  -----------------------------------------------------*/
-.playfieldgrid {
+.vramgrid {
     display: grid;
-    grid-template-columns: repeat(10, 32px);
-    grid-template-rows: repeat(18, 32px);
+    grid-template-columns: repeat(16, 32px);
+    grid-template-rows: repeat(16, 32px);
     gap: 0px;
     width: fit-content;
     height: fit-content;
@@ -58,24 +58,25 @@ THE PLAYFIELD GRID
     background-color: #ddd;
 }
 
-/* the minos that are normally used get a blue border */
+/* the minos that are normally used */
 .standard {
     border: 2px solid rgb(117, 150, 252);
 }
 
 /* ----------------------------------------------------- 
-the selected mino gets a green border
-the image is swapped in javascript
+the selected mino
+FYI: the image is swapped in javascript
  -----------------------------------------------------*/
 .selected {
     border: 2px solid rgb(0, 255, 0);
 }
 
-/* hovering a mino gives a blue border */
+/* hovering a mino */
 .cell:hover {
     border: 2px solid rgb(240, 255, 24);
 }
 
+/* the part of the playfield that can't be edited */
 .noStack{
     background-color: #555;
 }
