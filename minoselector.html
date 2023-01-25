@@ -8,10 +8,11 @@
     <div class="container">
         <div class="playfieldgrid"></div>
         <div class="spacing">&nbsp;</div>
-        <div class="vramgrid"></div>
+        <div class="vramgrid" id="vramgrid"></div>
     </div>
-    <p><input type="checkbox" id="scales" name="Random values (standard)">Random values (0x80 - 0x87)</p> 
-    <p><textarea readonly style="width:870px; height:200px;"></textarea></p>
+    <p><input type="checkbox" id="allowConfig" name="Random values (standard)">
+      <label for="allowConfig">Random values (0x80 - 0x87)</label></p> 
+    <p><textarea id="minoList" readonly style="width:870px; height:200px;"></textarea></p>
     <p><button>&gt;&gt; Generate Playfield</button></p>
     <p>TOLSTOJ and TONI 2023, with some help of -JJ</p>
     </div>

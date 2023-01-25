@@ -1,5 +1,36 @@
 // global variable defines which mino will be added when you press in the playfield 
-let currentMino; 
+let currentMino;
+
+window.onload = function() {
+    var currentMino = 80;
+    document.getElementById("80").click();
+    getMinoList();
+}
+
+const checkbox = document.getElementById("allowConfig");
+const vramgrid = document.getElementById("vramgrid");
+checkbox.addEventListener("change", function() {
+    if (this.checked) {
+        vramgrid.style.display = "none";
+    } else {
+        vramgrid.style.display = "grid";
+    }
+});
+
+// get the values for the textarea
+function getMinoList() {
+    let imageNames = "";
+    let stackCells = document.querySelectorAll(".stack");
+    stackCells.forEach(function(cell) {
+        let cellImage = cell.querySelector("img").src;
+        let startIndex = cellImage.indexOf("green/") + 6;
+        let endIndex = cellImage.indexOf(".png");
+        let imageName = cellImage.substring(startIndex, endIndex);
+        imageNames += imageName + ",";
+    });
+    let minoList = document.querySelector("#minoList");
+    minoList.value = imageNames.slice(0, -1);
+}
 
 // this function changes the image
 // > green -> grey: color = 'grey'
@@ -19,16 +50,15 @@ function changeBg(id, toColor) {
     
 // When certain keys are pressed, select the corresponding cells
 document.addEventListener("keydown", function(event) {
-    if ((event.keyCode >= 49 && event.keyCode <= 56) || (event.keyCode >= 65 && event.keyCode <= 90)) { 
+    if ((event.code >= "Key1" && event.code <= "Key7") || (event.code >= "KeyA" && event.code <= "KeyZ")) {
         let cell;
-    
-        if(event.keyCode >= 49 && event.keyCode <= 56)
-
-            // keys 1 - 7 activate the standard minos
-             cell = document.getElementById((event.keyCode-49+128).toString(16).padStart(2, "0"));
+        if(event.code >= "Key1" && event.code <= "Key7")
+            // numbers 1-7: select standard minos
+            // TODO (Tolstoj): There seem to be a problem here!
+            cell = document.getElementById((event.key.charCodeAt(0)-49+128).toString(16).padStart(2, "0"));
         else
-            // keys A-Z activate minos A-Z
-            cell = document.getElementById((event.keyCode-65+10).toString(16).padStart(2, "0"));
+            // letters select letter minos 
+            cell = document.getElementById((event.key.charCodeAt(0)-"A".charCodeAt(0) -22).toString(16).padStart(2, "0"));
         document.querySelectorAll(".cell").forEach(function(c) {
             c.classList.remove("selected");
             changeBg(c.id, "green");
@@ -46,10 +76,20 @@ for (let i = 0; i < 180; i++) {
         playfieldcell.classList.add("noStack");
     }else{
         playfieldcell.classList.add("stack");
+        let img = document.createElement("img");
+        img.src = "images/green/2F.png";
+        img.style.width = "100%";
+        img.style.height = "100%";
+        playfieldcell.appendChild(img);
+        playfieldcell.addEventListener("click", function(){
+            img.src = "images/green/" + currentMino + ".png";
+            getMinoList();
+        });
     }
     playfieldcell.classList.add("playfieldcell");
     document.querySelector(".playfieldgrid").appendChild(playfieldcell);
 }
+
 
 // Create the vram-grid (right)
 for (let i = 0; i < 256; i++) {
