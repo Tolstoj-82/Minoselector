@@ -1,3 +1,11 @@
+// TODOs
+// * add the . and - to the event listener
+// * make the random minos work
+// * no need for the text area (maybe in a accordion)
+// * multiselect
+// * import function
+
+
 // global variable defines which mino will be added when you press in the playfield 
 let currentMino = "80";
 
@@ -5,6 +13,11 @@ let currentMino = "80";
 window.onload = function() {
     document.getElementById("80").click();
     getMinoList();
+  
+    // it's not necessary to show the text area
+    // TODO: do I even need it or wouldn't it make more sense to store
+    // it in an array (or string)?
+//    document.getElementById("minoList").style.visibility = "hidden";
 }
 
 // this function copies the contents from the textarea into the clipboard
@@ -12,7 +25,7 @@ function copyText() {
     let textarea = document.getElementById("minoList");
     textarea.select();
     document.execCommand("copy");
-    
+
     // show the toast (snackbar)
     var x = document.getElementById("snackbar");
     x.className = "show";

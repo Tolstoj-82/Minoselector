@@ -1,7 +1,7 @@
 <html>
   <head>
     <link rel="stylesheet" href="style.css">
-    
+    <title>2-Player GB Tetris Mino selector</title>
   </head>
   <body bgcolor="#333" align="center">
     <div id="snackbar">Your mino sequence has been added to the clipboard.</div>
@@ -12,15 +12,18 @@
           <p>Add custom garbage to the start of your 2-player game.</p>
           <p>
             Select the mino types from the right grid and add them to the green cells of the left grid. This will be your initial playfield.<br>
-            To select a minotype either click it<br>
-            or use keys A-Z and 0-9 to select the corresponding mino types.<br>
-            or use numpad 1-8 to select the standard mino types for the garbage<br>
+            To select a minotype:
+            <ul>
+              <li>Click it</li>
+              <li>Use keys A-Z or 0-9 to select the corresponding minotypes</li>
+              <li>Use numpad 1-8 to select the standard garbage minotypes</li>
+            </ul>
             You can also make the minotype random by checking the checkbox below.
           </p>
           <p>
             <b>Info:</b><br>
-            The full stack is rendered if you chose height 5 whereas only the top parts are rendered if you chose height 1-4.<br>
-            If any row of your garbage is full, it will clear the line immediately.
+            The stack is fully rendered only if you chose height 5. Only the top parts are rendered if you chose height 1-4 and nothing is shown with height 0.<br>
+            If any row of your garbage is full, it will clear immediately once the game starts.
           </p>
         </span>
       </div>

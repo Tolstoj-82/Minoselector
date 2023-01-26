@@ -19,9 +19,10 @@ body{
     width: 400px;
 }
 
-/* ----------------------------------------------------- 
-(1) THE PLAYFIELD GRID
- -----------------------------------------------------*/
+/************************************************************
+ VPLAYFIELD
+*************************************************************/
+
  .playfieldgrid {
     display: grid;
     grid-template-columns: repeat(10, 32px);
@@ -36,9 +37,9 @@ body{
     border: solid red;
 }
 
-/* ----------------------------------------------------- 
-(2) THE VRAM GRID
- -----------------------------------------------------*/
+/************************************************************
+ VRAM GRID
+*************************************************************/
 .vramgrid {
     display: grid;    
     grid-template-columns: repeat(16, 32px);
@@ -58,8 +59,7 @@ body{
 }
 
 .playfieldcell {
-    /*border-color: #FFF;*/
-    border: 1px dotted #999;
+    border: 0px dotted #999;
     background-color: #ddd;
 }
 
@@ -68,21 +68,19 @@ body{
     border: 2px solid rgb(117, 150, 252);
 }
 
+/* not sure if that is needed */
 div img{
     pointer-events: none;
 }
 
-/* ----------------------------------------------------- 
-the selected mino
-FYI: the image is being swapped in javascript
- -----------------------------------------------------*/
+/* the selected mino */
 .selected {
-    border: 2px solid rgb(0, 255, 0);
+    border: 2px solid rgb(255, 245, 47);
 }
 
 /* hovering a mino */
 .cell:hover {
-    border: 2px solid rgb(240, 255, 24);
+    border: 2px solid red;
 }
 
 /* the part of the playfield that can't be edited */
@@ -107,6 +105,7 @@ FYI: the image is being swapped in javascript
     border-radius: 6px;
     padding: 20px;
     font-size: medium;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
     
     /* Position the tooltip */
     position: absolute;
@@ -121,7 +120,7 @@ FYI: the image is being swapped in javascript
 }
 
 /************************************************************
- TOAST, it seems to have a hick-up at the end
+ TOAST, it seems to have a hick-up at the end of the animation
 *************************************************************/
 #snackbar {
     visibility: hidden;
