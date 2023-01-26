@@ -4,8 +4,9 @@
     
   </head>
   <body bgcolor="#333" align="center">
+    <div id="snackbar">Your mino sequence has been added to the clipboard.</div>
     <p>
-      <h1>Customize the initial garbage stack</h1>
+      <h1>Customize the initial garbage</h1>
       <div class="tooltip"><img src="images/tooltip_w.png" width="25" height="25">
         <span class="tooltiptext">
           <p>Add custom garbage to the start of your 2-player game.</p>
@@ -31,8 +32,8 @@
     </div>
     <p><input type="checkbox" id="allowConfig" name="Random values (standard)">
       <label for="allowConfig">Random values (0x80 - 0x87)</label></p> 
-    <p><textarea id="minoList" readonly style="width:870px; height:50px;"></textarea></p>
-    <p><button>&gt;&gt; Generate Playfield</button></p>
+    <p><textarea id="minoList" readonly style="width:870px; height:60px;"></textarea></p>
+    <p><button onclick="copyText();">&gt;&gt; Generate Playfield</button></p>
     <p>TOLSTOJ and TONI 2023, with some help of -JJ</p>
     </div>
     <script src="scripts.js"></script>

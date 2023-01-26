@@ -74,7 +74,7 @@ div img{
 
 /* ----------------------------------------------------- 
 the selected mino
-FYI: the image is swapped in javascript
+FYI: the image is being swapped in javascript
  -----------------------------------------------------*/
 .selected {
     border: 2px solid rgb(0, 255, 0);
@@ -90,6 +90,9 @@ FYI: the image is swapped in javascript
     background-color: #555;
 }
 
+/************************************************************
+ TOOLTIP 
+*************************************************************/
 .tooltip {
     position: relative;
     display: inline-block;
@@ -116,3 +119,48 @@ FYI: the image is swapped in javascript
 .tooltip:hover .tooltiptext {
     visibility: visible;
 }
+
+/************************************************************
+ TOAST, it seems to have a hick-up at the end
+*************************************************************/
+#snackbar {
+    visibility: hidden;
+    min-width: 250px;
+    margin-left: -125px;
+    background-color: #FFF;
+    color: #000;
+    text-align: center;
+    border-radius: 2px;
+    padding: 16px;
+    position: fixed;
+    z-index: 1;
+    left: 50%;
+    bottom: 30px;
+    font-size: 17px;
+  }
+  
+  #snackbar.show {
+    visibility: visible;
+    -webkit-animation: fadein 0.5s, fadeout 0.5s 2.5s;
+    animation: fadein 0.5s, fadeout 0.5s 2.5s;
+  }
+  
+  @-webkit-keyframes fadein {
+    from {bottom: 0; opacity: 0;} 
+    to {bottom: 30px; opacity: 1;}
+  }
+  
+  @keyframes fadein {
+    from {bottom: 0; opacity: 0;}
+    to {bottom: 30px; opacity: 1;}
+  }
+  
+  @-webkit-keyframes fadeout {
+    from {bottom: 30px; opacity: 1;} 
+    to {bottom: 0; opacity: 0;}
+  }
+  
+  @keyframes fadeout {
+    from {bottom: 30px; opacity: 1;}
+    to {bottom: 0; opacity: 0;}
+  }

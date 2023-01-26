@@ -7,6 +7,18 @@ window.onload = function() {
     getMinoList();
 }
 
+// this function copies the contents from the textarea into the clipboard
+function copyText() {
+    let textarea = document.getElementById("minoList");
+    textarea.select();
+    document.execCommand("copy");
+    
+    // show the toast (snackbar)
+    var x = document.getElementById("snackbar");
+    x.className = "show";
+    setTimeout(function(){ x.className = x.className.replace("show", ""); }, 3000);
+}
+
 const checkbox = document.getElementById("allowConfig");
 const vramgrid = document.getElementById("vramgrid");
 checkbox.addEventListener("change", function() {
