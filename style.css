@@ -33,7 +33,7 @@ body{
 }
 
 .playfieldgrid .stack:hover {
-    background-color: #ADD8E6;
+    border: solid red;
 }
 
 /* ----------------------------------------------------- 
@@ -68,6 +68,10 @@ body{
     border: 2px solid rgb(117, 150, 252);
 }
 
+div img{
+    pointer-events: none;
+}
+
 /* ----------------------------------------------------- 
 the selected mino
 FYI: the image is swapped in javascript
@@ -84,4 +88,31 @@ FYI: the image is swapped in javascript
 /* the part of the playfield that can't be edited */
 .noStack{
     background-color: #555;
+}
+
+.tooltip {
+    position: relative;
+    display: inline-block;
+}
+  
+.tooltip .tooltiptext {
+    visibility: hidden;
+    width: 600px;
+    background-color: rgb(255, 255, 255);
+    color: rgb(0, 0, 0);
+    text-align: left;
+    border-radius: 6px;
+    padding: 20px;
+    font-size: medium;
+    
+    /* Position the tooltip */
+    position: absolute;
+    z-index: 1;
+    top: 100%;
+    left: 50%;
+    margin-left: -300px;
+}
+  
+.tooltip:hover .tooltiptext {
+    visibility: visible;
 }

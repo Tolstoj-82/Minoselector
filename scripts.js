@@ -1,8 +1,8 @@
 // global variable defines which mino will be added when you press in the playfield 
-let currentMino;
+let currentMino = "80";
 
+//
 window.onload = function() {
-    var currentMino = 80;
     document.getElementById("80").click();
     getMinoList();
 }
@@ -17,7 +17,7 @@ checkbox.addEventListener("change", function() {
     }
 });
 
-// get the values for the textarea
+// add the values to the textarea
 function getMinoList() {
     let imageNames = "";
     let stackCells = document.querySelectorAll(".stack");
@@ -25,7 +25,7 @@ function getMinoList() {
         let cellImage = cell.querySelector("img").src;
         let startIndex = cellImage.indexOf("green/") + 6;
         let endIndex = cellImage.indexOf(".png");
-        let imageName = cellImage.substring(startIndex, endIndex);
+        let imageName = cellImage.substring(startIndex, endIndex).toUpperCase();
         imageNames += imageName + ",";
     });
     let minoList = document.querySelector("#minoList");
@@ -47,26 +47,30 @@ function changeBg(id, toColor) {
         cell.style.backgroundImage = newBg;
     }
 }
-    
+ 
 // When certain keys are pressed, select the corresponding cells
 document.addEventListener("keydown", function(event) {
-    if ((event.code >= "Key1" && event.code <= "Key7") || (event.code >= "KeyA" && event.code <= "KeyZ")) {
-        let cell;
-        if(event.code >= "Key1" && event.code <= "Key7")
-            // numbers 1-7: select standard minos
-            // TODO (Tolstoj): There seem to be a problem here!
+        let cell = null;
+        if(event.code >= "Numpad1" && event.code <= "Numpad8"){
+            // numbers 1-8 select the standard minos
             cell = document.getElementById((event.key.charCodeAt(0)-49+128).toString(16).padStart(2, "0"));
-        else
+        }else if(event.code >= "KeyA" && event.code <= "KeyZ"){
             // letters select letter minos 
             cell = document.getElementById((event.key.charCodeAt(0)-"A".charCodeAt(0) -22).toString(16).padStart(2, "0"));
-        document.querySelectorAll(".cell").forEach(function(c) {
-            c.classList.remove("selected");
-            changeBg(c.id, "green");
-        });
-        cell.classList.add("selected");
-        changeBg(cell.id, "grey");
-        currentMino = cell.id;
-    }
+        }else if((event.code >= "Digit0" && event.code <= "Digit9")){
+            // numpad selects numbers 
+            cell = document.getElementById((event.key.charCodeAt(0)-48).toString(16).padStart(2, "0"));
+        }
+        
+        if(cell != null){
+            document.querySelectorAll(".cell").forEach(function(c) {
+                c.classList.remove("selected");
+                changeBg(c.id, "green");
+            });
+            cell.classList.add("selected");
+            changeBg(cell.id, "grey");
+            currentMino = cell.id;
+        }
 });
 
 // Create the playfield (left)
@@ -89,7 +93,6 @@ for (let i = 0; i < 180; i++) {
     playfieldcell.classList.add("playfieldcell");
     document.querySelector(".playfieldgrid").appendChild(playfieldcell);
 }
-
 
 // Create the vram-grid (right)
 for (let i = 0; i < 256; i++) {

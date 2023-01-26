@@ -4,7 +4,26 @@
     
   </head>
   <body bgcolor="#333" align="center">
-    <h1>Customize the initial garbage stack</h1>
+    <p>
+      <h1>Customize the initial garbage stack</h1>
+      <div class="tooltip"><img src="images/tooltip_w.png" width="25" height="25">
+        <span class="tooltiptext">
+          <p>Add custom garbage to the start of your 2-player game.</p>
+          <p>
+            Select the mino types from the right grid and add them to the green cells of the left grid. This will be your initial playfield.<br>
+            To select a minotype either click it<br>
+            or use keys A-Z and 0-9 to select the corresponding mino types.<br>
+            or use numpad 1-8 to select the standard mino types for the garbage<br>
+            You can also make the minotype random by checking the checkbox below.
+          </p>
+          <p>
+            <b>Info:</b><br>
+            The full stack is rendered if you chose height 5 whereas only the top parts are rendered if you chose height 1-4.<br>
+            If any row of your garbage is full, it will clear the line immediately.
+          </p>
+        </span>
+      </div>
+    </p>
     <div class="container">
         <div class="playfieldgrid"></div>
         <div class="spacing">&nbsp;</div>
@@ -12,7 +31,7 @@
     </div>
     <p><input type="checkbox" id="allowConfig" name="Random values (standard)">
       <label for="allowConfig">Random values (0x80 - 0x87)</label></p> 
-    <p><textarea id="minoList" readonly style="width:870px; height:200px;"></textarea></p>
+    <p><textarea id="minoList" readonly style="width:870px; height:50px;"></textarea></p>
     <p><button>&gt;&gt; Generate Playfield</button></p>
     <p>TOLSTOJ and TONI 2023, with some help of -JJ</p>
     </div>
