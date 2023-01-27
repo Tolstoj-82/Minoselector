@@ -1,8 +1,8 @@
 // TODOs
 // * multiselect (kinda)
-
+// * make sure if ctrl is pressed, it adds minos regardless
 // * grid on and off
-// * is there a way to distinguish between one cell chosen and multiple?
+// * is there a way to distinguish between one cell chosen and multiple? (probably not necessary!)
 // * highlight if a row is full
 // * center properly
 // * no need for the text area (maybe in a accordion)
@@ -16,7 +16,6 @@ let emptyMino = "2F";
 //
 window.onload = function() {
     document.getElementById("80").click();
-/////////////////////////////////////////////////////////////////////////////////////////
     addMatrix();
     document.querySelectorAll('.ui-state-default').forEach(e => e.addEventListener("mousedown", clickHandler));
     document.addEventListener("keydown", currentMino);
@@ -32,7 +31,6 @@ function getRandomMino(){
 function getMinoList() {
     let imageNames = "";
     let stackCells = document.querySelectorAll(".stack");
-    //alert(stackCells);
     stackCells.forEach(function(cell) {
         let cellImage = cell.querySelector("img").src;
         let startIndex = cellImage.indexOf("green/") + 6;
@@ -66,11 +64,8 @@ checkbox.addEventListener("change", function() {
         let selectedCell = document.querySelector('.cell.selected');
         let selectedCellId = selectedCell.id;
         currentMino = selectedCellId.toUpperCase();
-        alert(currentMino);
     }
 });
-
-
 
 // this function changes the image
 // > green -> grey: color = 'grey'
@@ -78,7 +73,6 @@ checkbox.addEventListener("change", function() {
 function changeBg(id, toColor) {
     let cell = document.getElementById(id);
     let currentBg = cell.style.backgroundImage;
-
     if (toColor == "green") {
         let newBg = currentBg.replace("green", "grey");
         cell.style.backgroundImage = newBg;
@@ -102,8 +96,10 @@ document.addEventListener("keydown", function(event) {
             // numpad selects numbers 
             cell = document.getElementById((event.key.charCodeAt(0)-48).toString(16).padStart(2, "0"));
         }else if(event.code == "Period" || event.code == "NumpadDecimal"){
+            // the dot
             cell = document.getElementById("24");
         }else if(event.code == "Minus" || event.code == "NumpadSubtract"){
+            // the dash
             cell = document.getElementById("25");
         }
         
@@ -117,29 +113,6 @@ document.addEventListener("keydown", function(event) {
             currentMino = cell.id;
         }
 });
-
-// Create the playfield (left)
-for (let i = 0; i < 180; i++) {
-    let playfieldcell = document.createElement("div");
-    if(i < 80){
-        playfieldcell.classList.add("noStack");
-    }else{
-        //playfieldcell.classList.add("stack");
-        let img = document.createElement("img");
-        img.src = "images/green/" + emptyMino + ".png";
-        img.style.width = "100%"; // this belongs in the CSS!
-        img.style.height = "100%";
-        playfieldcell.appendChild(img);
-        playfieldcell.addEventListener("click", function(event){
-            if(document.getElementById("allowConfig").checked) currentMino = getRandomMino();
-            if(event.ctrlKey) img.src = "images/green/" + emptyMino + ".png";
-            else img.src = "images/green/" + currentMino + ".png";
-            getMinoList();
-        });
-    }
-    playfieldcell.classList.add("playfieldcell");
-    document.querySelector(".playfieldgrid").appendChild(playfieldcell);
-}
 
 // Create the vram-grid (right)
 for (let i = 0; i < 256; i++) {
@@ -200,38 +173,9 @@ function clickHandler() {
   if(classList.includes("mino")){
     val = "255,255,255,0.8";
   }
-  //css = "#selectable .ui-selecting {";
-  //css += "background-image:";
-  //css += "linear-gradient(rgba(" + val + "), rgba(" + val + ")),";
-  //css += "url('images/" + selectionMinoType + ".png');}";
-  //css += "}";
-
-  //document.getElementById("mino").innerHTML = css;
 }
 
-
-
-// change the mino type when a key is pressed accordingly
-/*document.addEventListener('keypress', logKey);
-function logKey(e){
-  pressedKey = String.fromCharCode(e.keyCode).toUpperCase();
-  if(minoTypes.includes(pressedKey)) selectedMinoType = pressedKey;
-  css = "#selectable .ui-state-default:hover{";
-  css += "background-image: url('images/green/" + currentMino + ".png')";
-  css += "}";
-  document.getElementById('mino').innerHTML = css;
-}*/
-
-//
-function onPageLoad(){
-  addMatrix();
-  document.querySelectorAll('.ui-state-default').forEach(e => e.addEventListener("mousedown", clickHandler));
-  
-
-  document.addEventListener("keydown", currentMino);
-}
-
-// add the selectable matrix
+// add the playfield matrix
 function addMatrix(){
     ol = document.getElementById("selectable");
     rows = 18;

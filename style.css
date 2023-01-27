@@ -20,9 +20,6 @@ body{
 .spacing {
     width: 30px;
 }
-.playfieldgrid {
-    width: 400px;
-}
 
 .button {
     background-color: lightgrey;
@@ -48,24 +45,6 @@ body{
   }
   
 /************************************************************
- VPLAYFIELD
-*************************************************************/
-
- .playfieldgrid {
-    display: grid;
-    grid-template-columns: repeat(10, 32px);
-    grid-template-rows: repeat(18, 32px);
-    gap: 0px;
-    width: fit-content;
-    height: fit-content;
-    border: 3px solid #FFF;
-}
-
-.playfieldgrid .stack:hover {
-    border: solid red;
-}
-
-/************************************************************
  VRAM GRID
 *************************************************************/
 .vramgrid {
@@ -76,6 +55,7 @@ body{
     width: fit-content;
     height: fit-content;
     border: 3px solid #FFF;
+    cursor: pointer;
 }
 
 .cell, .playfieldcell {
@@ -84,11 +64,6 @@ body{
     border: 2px solid #999;
     background-size: cover;
     box-sizing: border-box;
-}
-
-.playfieldcell {
-    border: 0px dotted #999;
-    background-color: #ddd;
 }
 
 /* the minos that are normally used */
@@ -103,8 +78,7 @@ body{
 
 /* hovering a mino */
 .cell:hover {
-    border: 2px solid red;
-    background-image:url("images/green/07.png");
+    border: 2px solid rgb(0, 255, 17);
 }
 
 /************************************************************
@@ -183,7 +157,10 @@ body{
     from {bottom: 30px; opacity: 1;}
     to {bottom: 0; opacity: 0;}
   }
-  /*************************************************************************************************/
+
+/************************************************************
+ Playfield (new implementation)
+*************************************************************/
   li img{
     width: 100%;
     height: 100%;
@@ -214,19 +191,43 @@ body{
   }
   
   li:hover{
+    border: 3px solid rgb(0, 255, 17);
+  }
+ 
+  li.mino:hover{
     border: 3px solid red;
   }
-  
+
+  li.stack{
+    cursor: pointer;
+  }
+
   #selectable .mino:hover img{
-    opacity: 0;
+    opacity: 10%;
+    background-color: rgb(0, 0, 0);
   }
 
   #selectable li.mino.ui-selecting:hover{
-    opacity: 0;
+    opacity: 10%;
+    background-color: rgb(0, 0, 0);
   } 
+
+  .ui-selecting img{
+    opacity: 10%;
+    background-color: white;
+  }
+
+  .ui-selecting .mino img{
+    /*opacity: 10%;
+    background-color: rgb(0, 0, 0);*/
+  }
 
   /* the part of the playfield that can't be edited */
 .noStack, .noStack:hover{
-    background-color: #555;
+    background-color: #999;
     border: 0px;
+}
+
+.stack{
+    background-color: #FFF;
 }
