@@ -1,13 +1,10 @@
 // TODOs
-// * multiselect (kinda)
 // * make sure if ctrl is pressed, it adds minos regardless
 // * grid on and off
 // * is there a way to distinguish between one cell chosen and multiple? (probably not necessary!)
-// * highlight if a row is full
 // * center properly
 // * no need for the text area (maybe in a accordion)
-// * import function
-
+// * import functionality
 
 // global variable defines which mino will be added when you press in the playfield 
 var currentMino = "80";
@@ -20,6 +17,18 @@ window.onload = function() {
     document.querySelectorAll('.ui-state-default').forEach(e => e.addEventListener("mousedown", clickHandler));
     document.addEventListener("keydown", currentMino);
     document.addEventListener("mouseup", getMinoList());
+}
+
+// this function counts the occupied minos in a row
+function countMinoInRow(rowNumber) {
+    var minoCount = 0;
+    var elements = document.getElementsByClassName("row-" + rowNumber);
+    for (var i = 0; i < elements.length; i++) {
+        if (elements[i].classList.contains("mino")) {
+            minoCount++;
+        }
+    }
+    return minoCount;
 }
 
 //select Ramdom Minotype
@@ -139,27 +148,41 @@ for (let i = 0; i < 256; i++) {
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // change that!!! remove if you press ctrl
 $( function(){
-  $("#selectable").selectable({
-    stop: function(){
-      var mino = "mino";
-      var remove = false;
-      $(".ui-selected", this).each(function(i, el){
-        if(document.getElementById("allowConfig").checked) currentMino = getRandomMino();
-        if(i === 0 && this.classList.contains("mino")) remove = true;
-        //if(i === 0 && this.classList.contains("mino") && event.ctrlKey) remove = true;
-        if(!this.classList.contains("noStack")){
-            if(remove){
-                this.classList.remove(mino);
-                $(el).find('img').attr('src', 'images/green/' + emptyMino + '.png');
-            }
-            else{
-                this.classList.add(mino);
-                $(el).find('img').attr('src', 'images/green/' + currentMino + '.png');
+    $("#selectable").selectable({
+        stop: function(){
+            var mino = "mino";
+            var remove = false;
+            $(".ui-selected", this).each(function(i, el){
+                if(document.getElementById("allowConfig").checked) currentMino = getRandomMino();
+                if(i === 0 && this.classList.contains("mino")) remove = true;
+                //if(i === 0 && this.classList.contains("mino") && event.ctrlKey) remove = true;
+                if(!this.classList.contains("noStack")){
+                    if(remove){
+                        this.classList.remove(mino);
+                        $(el).find('img').attr('src', 'images/green/' + emptyMino + '.png');
+                    }
+                    else{
+                        this.classList.add(mino);
+                        $(el).find('img').attr('src', 'images/green/' + currentMino + '.png');
+                    }
+                }
+            });
+
+            // update the mino list
+            getMinoList();
+            
+            // check each row and make sure it won't clear immediately
+            let nMino;
+            for(let i=1; i<=10; i++){
+                nMino = countMinoInRow(i); 
+                let rows = document.getElementsByClassName("row-" + i);
+                if(nMino == 10){
+                    for(let j = 0; j < rows.length; j++) rows[j].classList.add("clear");
+                }else{
+                    for(let j = 0; j < rows.length; j++) rows[j].classList.remove("clear");
+                }
             }
         }
-      });
-      getMinoList();
-    }
     });  
 });
 
@@ -193,10 +216,11 @@ function addMatrix(){
                 img.src = "images/green/" + emptyMino + ".png";
                 li.appendChild(img);
                 li.classList.add("stack");
+                li.classList.add("row-"+(currentRow-8));
             }
         ol.appendChild(li);
         
-        currentRow++;
+        currentCol++;
         
         // create a new row
         if(currentCol == 10){
