@@ -1,0 +1,47 @@
+#selectable .mino{
+  background-repeat: no-repeat;
+  background-size: 30px 30px;
+  background-image: url('images/T.png');
+}
+
+#selectable {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  width: 320px;
+  height: 576px;
+  border: 3px solid black;
+}
+
+#selectable li {
+  margin: 0px;
+  padding: 0px;
+  float: left;
+  width: 32px;
+  height: 32px;
+  background: #FFF;
+  background-repeat: no-repeat;
+  background-size: 32px 32px;
+}
+
+#selectable li.number, #selectable li.number:hover {
+  background: #303030;
+  color: #fff;
+}
+
+#selectable li:hover{
+  background-image:
+  linear-gradient(rgba(0,0,0,0.2), rgba(0,0,0,0.2)),
+  url('images/T.png');
+}
+
+#selectable li.mino:hover{
+  background-image: linear-gradient(rgba(255,255,255,0.8), rgba(255,255,255,0.8)),
+  url('images/T.png');
+}
+
+#selectable li.ui-selecting:hover{
+  background-image:
+  linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)),
+  url('images/G.png');
+}

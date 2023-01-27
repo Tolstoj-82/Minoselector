@@ -1,47 +1,26 @@
 // TODOs
-// * multiselect (kinda)
-
 // * grid on and off
-// * is there a way to distinguish between one cell chosen and multiple?
 // * highlight if a row is full
 // * center properly
+// * numbers to the rows and cols?
 // * no need for the text area (maybe in a accordion)
+// * multiselect
 // * import function
 
 
 // global variable defines which mino will be added when you press in the playfield 
-var currentMino = "80";
+let currentMino = "80";
 let emptyMino = "2F";
 
 //
 window.onload = function() {
     document.getElementById("80").click();
-/////////////////////////////////////////////////////////////////////////////////////////
-    addMatrix();
-    document.querySelectorAll('.ui-state-default').forEach(e => e.addEventListener("mousedown", clickHandler));
-    document.addEventListener("keydown", currentMino);
-    document.addEventListener("mouseup", getMinoList());
+    getMinoList();
 }
 
 //select Ramdom Minotype
 function getRandomMino(){
     return (Math.floor(Math.random() * 8) + 80).toString();
-}
-
-// add the values to the textarea
-function getMinoList() {
-    let imageNames = "";
-    let stackCells = document.querySelectorAll(".stack");
-    //alert(stackCells);
-    stackCells.forEach(function(cell) {
-        let cellImage = cell.querySelector("img").src;
-        let startIndex = cellImage.indexOf("green/") + 6;
-        let endIndex = cellImage.indexOf(".png");
-        let imageName = cellImage.substring(startIndex, endIndex).toUpperCase();
-        imageNames += imageName + ",";
-    });
-    let minoList = document.querySelector("#minoList");
-    minoList.value = imageNames.slice(0, -1);
 }
 
 // this function copies the contents from the textarea into the clipboard
@@ -60,17 +39,26 @@ const checkbox = document.getElementById("allowConfig");
 const vramgrid = document.getElementById("vramgrid");
 checkbox.addEventListener("change", function() {
     if (this.checked) {
-        //vramgrid.style.display = "none";
+        vramgrid.style.display = "none";
     } else {
-        //vramgrid.style.display = "grid";
-        let selectedCell = document.querySelector('.cell.selected');
-        let selectedCellId = selectedCell.id;
-        currentMino = selectedCellId.toUpperCase();
-        alert(currentMino);
+        vramgrid.style.display = "grid";
     }
 });
 
-
+// add the values to the textarea
+function getMinoList() {
+    let imageNames = "";
+    let stackCells = document.querySelectorAll(".stack");
+    stackCells.forEach(function(cell) {
+        let cellImage = cell.querySelector("img").src;
+        let startIndex = cellImage.indexOf("green/") + 6;
+        let endIndex = cellImage.indexOf(".png");
+        let imageName = cellImage.substring(startIndex, endIndex).toUpperCase();
+        imageNames += imageName + ",";
+    });
+    let minoList = document.querySelector("#minoList");
+    minoList.value = imageNames.slice(0, -1);
+}
 
 // this function changes the image
 // > green -> grey: color = 'grey'
@@ -124,7 +112,7 @@ for (let i = 0; i < 180; i++) {
     if(i < 80){
         playfieldcell.classList.add("noStack");
     }else{
-        //playfieldcell.classList.add("stack");
+        playfieldcell.classList.add("stack");
         let img = document.createElement("img");
         img.src = "images/green/" + emptyMino + ".png";
         img.style.width = "100%"; // this belongs in the CSS!
@@ -161,104 +149,4 @@ for (let i = 0; i < 256; i++) {
         currentMino = this.id;
   };
   document.querySelector(".vramgrid").appendChild(cell);
-}
-
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// change that!!! remove if you press ctrl
-$( function(){
-  $("#selectable").selectable({
-    stop: function(){
-      var mino = "mino";
-      var remove = false;
-      $(".ui-selected", this).each(function(i, el){
-        if(document.getElementById("allowConfig").checked) currentMino = getRandomMino();
-        if(i === 0 && this.classList.contains("mino")) remove = true;
-        //if(i === 0 && this.classList.contains("mino") && event.ctrlKey) remove = true;
-        if(!this.classList.contains("noStack")){
-            if(remove){
-                this.classList.remove(mino);
-                $(el).find('img').attr('src', 'images/green/' + emptyMino + '.png');
-            }
-            else{
-                this.classList.add(mino);
-                $(el).find('img').attr('src', 'images/green/' + currentMino + '.png');
-            }
-        }
-      });
-      getMinoList();
-    }
-    });  
-});
-
-// assign a new class to a clicked mino
-function clickHandler() {
-
-  thisEl = document.getElementById(this.id);
-  classList = thisEl.className;
-
-  val = "0,0,0,0.5";
-  if(classList.includes("mino")){
-    val = "255,255,255,0.8";
-  }
-  //css = "#selectable .ui-selecting {";
-  //css += "background-image:";
-  //css += "linear-gradient(rgba(" + val + "), rgba(" + val + ")),";
-  //css += "url('images/" + selectionMinoType + ".png');}";
-  //css += "}";
-
-  //document.getElementById("mino").innerHTML = css;
-}
-
-
-
-// change the mino type when a key is pressed accordingly
-/*document.addEventListener('keypress', logKey);
-function logKey(e){
-  pressedKey = String.fromCharCode(e.keyCode).toUpperCase();
-  if(minoTypes.includes(pressedKey)) selectedMinoType = pressedKey;
-  css = "#selectable .ui-state-default:hover{";
-  css += "background-image: url('images/green/" + currentMino + ".png')";
-  css += "}";
-  document.getElementById('mino').innerHTML = css;
-}*/
-
-//
-function onPageLoad(){
-  addMatrix();
-  document.querySelectorAll('.ui-state-default').forEach(e => e.addEventListener("mousedown", clickHandler));
-  
-
-  document.addEventListener("keydown", currentMino);
-}
-
-// add the selectable matrix
-function addMatrix(){
-    ol = document.getElementById("selectable");
-    rows = 18;
-    cols = 10;
-    currentRow = 1;
-    currentCol = 0;
- 
-    for(i=1; i<=180; i++){
-        li = document.createElement("li");
-
-            if(i<=80){
-                li.classList.add("noStack");
-            }else{
-                let img = document.createElement("img");
-                img.src = "images/green/" + emptyMino + ".png";
-                li.appendChild(img);
-                li.classList.add("stack");
-            }
-        ol.appendChild(li);
-        
-        currentRow++;
-        
-        // create a new row
-        if(currentCol == 10){
-            currentCol = 0;
-            currentRow++;
-        }
-    }
-    getMinoList();
 }

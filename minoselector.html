@@ -1,45 +1,52 @@
 <html>
   <head>
     <link rel="stylesheet" href="style.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+    <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
     <title>2-Player GB Tetris Mino selector</title>
   </head>
-  <body bgcolor="#333" align="center">
-    <div id="snackbar">Your mino sequence has been added to the clipboard.</div>
-    <p>
-      <h1>Customize the initial garbage</h1>
-      <div class="tooltip"><img src="images/tooltip_w.png" width="25" height="25">
-        <span class="tooltiptext">
-          <p>Add custom garbage to the start of your 2-player game.</p>
-          <p>
-            Select the mino types from the right grid and add them to the green cells of the left grid. This will be your initial playfield.<br>
-            To select a minotype:
-            <ul>
-              <li>Click it</li>
-              <li>Use keys A-Z or 0-9 to select the corresponding minotypes</li>
-              <li>Use numpad 1-8 to select the standard garbage minotypes</li>
-            </ul>
-            Tipp: Clicking while holding the shift key, deletes the mino.<br>
-            You can also make the minotype random by checking the checkbox below.
-          </p>
-          <p>
-            <b>Info:</b><br>
-            The stack is fully rendered only if you chose height 5. Only the top parts are rendered if you chose height 1-4 and nothing is shown with height 0.<br>
-            If any row of your garbage is full, it will clear immediately once the game starts.
-          </p>
-        </span>
+  <body align="center">
+    <div class="center-container">
+      <div id="snackbar">Your mino sequence has been added to the clipboard.</div>
+      <p>
+        <h1>Customize the initial garbage</h1>
+        <div class="tooltip"><img src="images/tooltip_w.png" width="25" height="25">
+          <span class="tooltiptext">
+            <p>Add custom garbage to the start of your 2-player game.</p>
+            <p>
+              Select the mino types from the right grid and add them to the green cells of the left grid. This will be your initial playfield.<br>
+              To select a minotype:
+              <ul>
+                <li>Click it</li>
+                <li>Use keys A-Z or 0-9 to select the corresponding minotypes</li>
+                <li>Use numpad 1-8 to select the standard garbage minotypes</li>
+              </ul>
+              Tipp: Clicking while holding the shift key, deletes the mino.<br>
+              You can also make the minotype random by checking the checkbox below.
+            </p>
+            <p>
+              <b>Info:</b><br>
+              The stack is fully rendered only if you chose height 5. Only the top parts are rendered if you chose height 1-4 and nothing is shown with height 0.<br>
+              If any row of your garbage is full, it will clear immediately once the game starts.
+            </p>
+          </span>
+        </div>
+      </p>
+      <div class="container">
+          <div class="playfieldgrid"></div>  
+          <ol id="selectable"></ol>
+          <div class="spacing">&nbsp;</div>
+          <div class="vramgrid" id="vramgrid"></div>
       </div>
-    </p>
-    <div class="container">
-        <div class="playfieldgrid"></div>
-        <div class="spacing">&nbsp;</div>
-        <div class="vramgrid" id="vramgrid"></div>
-    </div>
-    <p><input type="checkbox" id="allowConfig" name="Random values (standard)">
-      <label for="allowConfig">Random values (0x80 - 0x87)</label></p> 
-    <p><textarea id="minoList" readonly style="width:870px; height:60px;"></textarea></p>
-    <p><button onclick="copyText();">&gt;&gt; Generate Playfield</button></p>
-    <p>TOLSTOJ and TONI 2023, with some help of -JJ</p>
-    </div>
+      <p>
+        <input type="checkbox" id="allowConfig" class="checkbox">
+          <label for="allowConfig" class="label">Use random minos (0x80 - 0x87)</label>
+      </p> 
+      <p><textarea id="minoList" readonly style="width:870px; height:60px;"></textarea></p>
+      <p><button onclick="copyText();" class="button">Use this playfield</button></p>
+      <p>TOLSTOJ and TONI 2023, with some help of -JJ</p>
+      </div>
+  </div>
     <script src="scripts.js"></script>
   </body>
 </html>

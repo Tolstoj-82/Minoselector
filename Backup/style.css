@@ -1,11 +1,6 @@
 body{
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     color: #FFF;
-    background-color: #333;
-    width: 100%;
-    overflow-y: scroll;
-    margin-left: 20;
-    align-items: center;
 }
 
 .container {
@@ -96,6 +91,11 @@ body{
     border: 2px solid rgb(117, 150, 252);
 }
 
+/* not sure if that is needed */
+div img{
+    pointer-events: none;
+}
+
 /* the selected mino */
 .selected {
     border: 2px solid rgb(255, 245, 47);
@@ -105,6 +105,11 @@ body{
 .cell:hover {
     border: 2px solid red;
     background-image:url("images/green/07.png");
+}
+
+/* the part of the playfield that can't be edited */
+.noStack{
+    background-color: #555;
 }
 
 /************************************************************
@@ -144,6 +149,7 @@ body{
 #snackbar {
     visibility: hidden;
     min-width: 250px;
+    margin-left: -125px;
     background-color: #FFF;
     color: #000;
     text-align: center;
@@ -155,8 +161,7 @@ body{
     bottom: 30px;
     font-size: 17px;
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-    transform: translate(-50%, 0);
-}
+  }
   
   #snackbar.show {
     visibility: visible;
@@ -183,50 +188,3 @@ body{
     from {bottom: 30px; opacity: 1;}
     to {bottom: 0; opacity: 0;}
   }
-  /*************************************************************************************************/
-  li img{
-    width: 100%;
-    height: 100%;
-  }
-
-  #selectable .mino{
-    background-repeat: no-repeat;
-    background-size: 32px 32px;
-    background-image: url('images/green/2F.png');
-  }
-  
-  #selectable {
-    list-style-type: none;
-    margin: 0;
-    padding: 0;
-    width: 320px;
-    height: 576px;
-    border: 3px solid rgb(255, 255, 255);
-  }
-  
-  #selectable li {
-    margin: 0px;
-    padding: 0px;
-    float: left;
-    width: 32px;
-    height: 32px;
-    box-sizing: border-box;
-  }
-  
-  li:hover{
-    border: 3px solid red;
-  }
-  
-  #selectable .mino:hover img{
-    opacity: 0;
-  }
-
-  #selectable li.mino.ui-selecting:hover{
-    opacity: 0;
-  } 
-
-  /* the part of the playfield that can't be edited */
-.noStack, .noStack:hover{
-    background-color: #555;
-    border: 0px;
-}
