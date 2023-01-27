@@ -1,5 +1,6 @@
 // TODOs
-// * add the . and - to the event listener
+// * grid on and off
+// * numbers to the rows and cols?
 // * make the random minos work
 // * no need for the text area (maybe in a accordion)
 // * multiselect
@@ -8,16 +9,12 @@
 
 // global variable defines which mino will be added when you press in the playfield 
 let currentMino = "80";
+let emptyMino = "2F";
 
 //
 window.onload = function() {
     document.getElementById("80").click();
     getMinoList();
-  
-    // it's not necessary to show the text area
-    // TODO: do I even need it or wouldn't it make more sense to store
-    // it in an array (or string)?
-//    document.getElementById("minoList").style.visibility = "hidden";
 }
 
 // this function copies the contents from the textarea into the clipboard
@@ -75,6 +72,7 @@ function changeBg(id, toColor) {
  
 // When certain keys are pressed, select the corresponding cells
 document.addEventListener("keydown", function(event) {
+        //alert(event.code);
         let cell = null;
         if(event.code >= "Numpad1" && event.code <= "Numpad8"){
             // numbers 1-8 select the standard minos
@@ -85,6 +83,10 @@ document.addEventListener("keydown", function(event) {
         }else if((event.code >= "Digit0" && event.code <= "Digit9")){
             // numpad selects numbers 
             cell = document.getElementById((event.key.charCodeAt(0)-48).toString(16).padStart(2, "0"));
+        }else if(event.code == "Period" || event.code == "NumpadDecimal"){
+            cell = document.getElementById("24");
+        }else if(event.code == "Minus" || event.code == "NumpadSubtract"){
+            cell = document.getElementById("25");
         }
         
         if(cell != null){
@@ -106,12 +108,13 @@ for (let i = 0; i < 180; i++) {
     }else{
         playfieldcell.classList.add("stack");
         let img = document.createElement("img");
-        img.src = "images/green/2F.png";
-        img.style.width = "100%";
+        img.src = "images/green/" + emptyMino + ".png";
+        img.style.width = "100%"; // this belongs in the CSS!
         img.style.height = "100%";
         playfieldcell.appendChild(img);
-        playfieldcell.addEventListener("click", function(){
-            img.src = "images/green/" + currentMino + ".png";
+        playfieldcell.addEventListener("click", function(event){
+            if(event.ctrlKey) img.src = "images/green/" + emptyMino + ".png";
+            else img.src = "images/green/" + currentMino + ".png";
             getMinoList();
         });
     }
