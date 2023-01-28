@@ -133,8 +133,12 @@ body{
   transform: translate(-50%, 0);
 }
 
-.toast#rowsFull{
+.toast.red {
   background-color: lightpink;
+}
+
+.toast.green {
+  background-color: lightgreen;
 }
 
 .toast.show {
@@ -299,8 +303,3 @@ body{
     background-color: grey;
     border: 2px solid white;
   }
-
-  .label:hover, .checkbox:hover {
-    color: red;
-  }
-  

@@ -249,3 +249,32 @@ function addMatrix(){
     }
     getMinoList();
 }
+
+// import a CSV file
+function csvToPlayfield(textarea) {
+  
+    // Split the csv data into an array of values
+    var data = textarea.value;
+    var values = data.split(',');
+  
+    // check if the number of values is 100 and if each value is a 2-digit hexadecimal number
+    if (values.length !== 100 || !values.every(val => /^[0-9A-F]{2}$/i.test(val.trim())) ) {
+        displayToast("errorImport");
+      return;
+    }
+    
+    // Loop through the stack and add the image
+    var stackDivs = document.getElementsByClassName("stack");
+    for (var i = 0; i < stackDivs.length; i++) {
+      var div = stackDivs[i];
+      var img = div.getElementsByTagName("img")[0];
+      img.src = "images/green/" + values[i] + ".png";
+      div.classList.add("ui-selectee");
+      div.classList.add("mino");
+    }
+
+    displayToast("successImport");
+    getMinoList();
+    textarea.value = "";
+  }
+  

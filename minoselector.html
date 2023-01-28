@@ -3,12 +3,17 @@
     <link rel="stylesheet" href="style.css">
     <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
     <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
+    <!--
+    <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js" integrity="sha256-YEBENHBDbX5CjOiB/JMR1f+Cv2gQI5F0/Kj2RZaEQY=" crossorigin="anonymous"></script>
+    -->
     <title>2-Player GB Tetris Mino selector</title>
   </head>
-  <body align="center">
+  <body>
     <div class="center-container">
-      <div class="toast" id="minoAdded">Your mino sequence has been added to the clipboard.</div>
-      <div class="toast" id="rowsFull">There are full rows! These will be cleared immediately.</div>
+      <div class="toast green" id="minoAdded">Your mino sequence has been added to the clipboard.</div>
+      <div class="toast red" id="rowsFull">There are full rows! These will be cleared immediately.</div>
+      <div class="toast red" id="errorImport">The provided data does not seem to be valid. Make sure it consists of exactly 100 comma-seperated 2-digit hex values.</div>
+      <div class="toast green" id="successImport">Your stack was successfully imported.</div>
       <p>
         <div class="tooltip-container">
         <h1>Customize the initial garbage</h1>&nbsp;&nbsp;
@@ -28,6 +33,9 @@
                     The stack is fully rendered only if you chose height 5. Only the top parts are rendered if you chose height 1-4 and nothing is shown with height 0.<br>
                     If any row of your garbage is full, it will clear immediately once the game starts.
                 </p>
+                <p>
+                  You can also load a stack by copying a CSV file to the Textarea (Import CSV).
+                </p>
             </span>
           </div>
         </div>
@@ -43,8 +51,17 @@
           <input type="checkbox" id="allowConfig" class="checkbox" checked>
             <label for="allowConfig" class="label">Use random minos (0x80 - 0x87)</label>
         </p> 
-        <p><textarea id="minoList" readonly style="width:870px; height:60px;"></textarea></p>
-        <p><button onclick="copyText();" class="button">Use this playfield</button></p>
+          <h3>Current playfield (read-only)</h3>
+          <div>
+            <p><textarea id="minoList" readonly style="width:870px; height:60px;"></textarea></p>
+            <p><button onclick="copyText();" class="button">Copy stack to clipboard</button></p>
+          </div>
+          <h3>Import CSV</h3>
+          <div>
+            <p><textarea id="importCsv" style="width:870px; height:60px;"></textarea></p>
+            <p><button onclick="csvToPlayfield(importCsv);" class="button">Import data</button></p>
+          </div>
+        
         <p>TOLSTOJ and TONI 2023, with some help of -JJ</p>
       </div>
     </div>
