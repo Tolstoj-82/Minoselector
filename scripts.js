@@ -1,6 +1,5 @@
 // TODOs
 // * make sure if ctrl is pressed, it adds minos regardless
-// * center properly
 // * no need for the text area (maybe in a accordion)
 // * import functionality
 
@@ -9,13 +8,14 @@ var currentMino = "80";
 let emptyMino = "2F";
 
 //
-window.onload = function() {
+document.addEventListener("DOMContentLoaded", function() {
+//window.onload = function() {
     document.getElementById("80").click();
     addMatrix();
     document.querySelectorAll('.ui-state-default').forEach(e => e.addEventListener("mousedown", clickHandler));
     document.addEventListener("keydown", currentMino);
     document.addEventListener("mouseup", getMinoList());
-}
+});
 
 // display the toast
 function displayToast(id){
@@ -207,13 +207,14 @@ $( function(){
 // assign a new class to a clicked mino
 function clickHandler() {
 
-  thisEl = document.getElementById(this.id);
-  classList = thisEl.className;
+    thisEl = document.getElementById(this.id);
+    classList = thisEl.className;
 
-  val = "0,0,0,0.5";
-  if(classList.includes("mino")){
-    val = "255,255,255,0.8";
-  }
+    // this is not in use... keep it?
+    val = "0,0,0,0.5";
+    if(classList.includes("mino")){
+        val = "255,255,255,0.8";
+    }
 }
 
 // add the playfield matrix

@@ -24,6 +24,21 @@ body{
     width: 30px;
 }
 
+.tooltip-container {
+  display: flex;
+  align-items: center;
+  margin: auto;
+  width: fit-content;
+}
+
+#config-container {
+  display: flex;
+  align-items: center;
+  margin: auto;
+  width: fit-content;
+  flex-direction: column;
+}
+
 /************************************************************
  VRAM GRID
 *************************************************************/
@@ -69,7 +84,12 @@ body{
     position: relative;
     display: inline-block;
 }
-  
+
+#tooltip-image{
+    width: 2em; 
+    height: 2em;
+}
+
 .tooltip .tooltiptext {
     visibility: hidden;
     width: 600px;
@@ -86,7 +106,7 @@ body{
     z-index: 1;
     top: 100%;
     left: 50%;
-    margin-left: -300px;
+    margin-left: -500px;
 }
   
 .tooltip:hover .tooltiptext {
