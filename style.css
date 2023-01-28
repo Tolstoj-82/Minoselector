@@ -1,3 +1,6 @@
+/************************************************************
+ GENERAL STYLINGS
+*************************************************************/
 body{
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     color: #FFF;
@@ -21,29 +24,6 @@ body{
     width: 30px;
 }
 
-.button {
-    background-color: lightgrey;
-    border: 2px solid lightgray;
-    color: black;
-    padding: 10px 20px 10px 20px;
-    text-align: center;
-    text-decoration: none;
-    display: inline-block;
-    font-size: 16px;
-    margin: 4px 2px;
-    cursor: pointer;
-    border-radius: 12px;
-  }
-
-  .button:hover {
-    background-color: grey;
-    border: 2px solid white;
-  }
-
-  .label:hover, .checkbox:hover {
-    color: red;
-  }
-  
 /************************************************************
  VRAM GRID
 *************************************************************/
@@ -54,7 +34,8 @@ body{
     gap: 0px;
     width: fit-content;
     height: fit-content;
-    border: 3px solid #FFF;
+    border: 30px solid rgb(158, 210, 144);
+    border-radius: 50px;
     cursor: pointer;
 }
 
@@ -113,53 +94,57 @@ body{
 }
 
 /************************************************************
- TOAST, it seems to have a hick-up at the end of the animation
+ TOAST ANIMATION
 *************************************************************/
-#snackbar {
-    visibility: hidden;
-    min-width: 250px;
-    background-color: #FFF;
-    color: #000;
-    text-align: center;
-    border-radius: 2px;
-    padding: 16px;
-    position: fixed;
-    z-index: 1;
-    left: 50%;
-    bottom: 30px;
-    font-size: 17px;
-    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-    transform: translate(-50%, 0);
+.toast {
+  visibility: hidden;
+  min-width: 250px;
+  background-color: #FFF;
+  color: #000;
+  text-align: center;
+  border-radius: 2px;
+  padding: 16px;
+  position: fixed;
+  z-index: 1;
+  left: 50%;
+  bottom: 30px;
+  font-size: 17px;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+  transform: translate(-50%, 0);
+}
+
+.toast#rowsFull{
+  background-color: lightpink;
+}
+
+.toast.show {
+  visibility: visible;
+  -webkit-animation: fadein 0.5s, fadeout 0.5s 2.5s;
+  animation: fadein 0.5s, fadeout 0.5s 2.5s;
 }
   
-  #snackbar.show {
-    visibility: visible;
-    -webkit-animation: fadein 0.5s, fadeout 0.5s 2.5s;
-    animation: fadein 0.5s, fadeout 0.5s 2.5s;
-  }
+@-webkit-keyframes fadein {
+  from {bottom: 0; opacity: 0;} 
+  to {bottom: 30px; opacity: 1;}
+}
   
-  @-webkit-keyframes fadein {
-    from {bottom: 0; opacity: 0;} 
-    to {bottom: 30px; opacity: 1;}
-  }
+@keyframes fadein {
+  from {bottom: 0; opacity: 0;}
+  to {bottom: 30px; opacity: 1;}
+}
   
-  @keyframes fadein {
-    from {bottom: 0; opacity: 0;}
-    to {bottom: 30px; opacity: 1;}
-  }
+@-webkit-keyframes fadeout {
+  from {bottom: 30px; opacity: 1;} 
+  to {bottom: 0; opacity: 0;}
+}
   
-  @-webkit-keyframes fadeout {
-    from {bottom: 30px; opacity: 1;} 
-    to {bottom: 0; opacity: 0;}
-  }
-  
-  @keyframes fadeout {
-    from {bottom: 30px; opacity: 1;}
-    to {bottom: 0; opacity: 0;}
-  }
+@keyframes fadeout {
+  from {bottom: 30px; opacity: 1;}
+  to {bottom: 0; opacity: 0;}
+}
 
 /************************************************************
- Playfield (new implementation)
+ PLAYFIELD
 *************************************************************/
   li img{
     width: 100%;
@@ -240,3 +225,62 @@ body{
     background-color: lightsalmon;
     opacity: 0.5; /* adjust the value to control the opacity */
   }
+
+  /************************************************************
+ INPUT STYLINGS: BUTON, CHECKBOX AND RADIO BUTTON
+*************************************************************/
+  input:where([type="checkbox"], [type="radio"]){
+    -webkit-appearance: none;
+    appearance: none;
+    width: 22px;
+    height: 22px;
+    margin: calc(0.75em - 11px) 0.25rem 0 0;
+    vertical-align: top;
+    border: 2px solid #ddd;
+    border-radius: 4px;
+    background: #fff no-repeat center center;
+  }
+  
+  input[type="radio"]{
+    border-radius : 50%;
+  }
+  
+  input:where([type="checkbox"], [type="radio"]):where(:active:not(:disabled), :focus){
+    border-color : #696;
+    outline      : none;
+  }
+  
+  input:where([type="checkbox"], [type="radio"]):disabled{
+    background : #eee;
+  }
+  
+  input[type="checkbox"]:checked{
+    background-image : url('images/checkbox.svg');
+  }
+  
+  input[type="radio"]:checked{
+    background-image : url('images/radio.svg');
+  }
+  .button {
+    background-color: lightgrey;
+    border: 2px solid lightgray;
+    color: black;
+    padding: 10px 20px 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+    border-radius: 12px;
+  }
+
+  .button:hover {
+    background-color: grey;
+    border: 2px solid white;
+  }
+
+  .label:hover, .checkbox:hover {
+    color: red;
+  }
+  

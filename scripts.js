@@ -1,7 +1,5 @@
 // TODOs
 // * make sure if ctrl is pressed, it adds minos regardless
-// * grid on and off
-// * is there a way to distinguish between one cell chosen and multiple? (probably not necessary!)
 // * center properly
 // * no need for the text area (maybe in a accordion)
 // * import functionality
@@ -17,6 +15,15 @@ window.onload = function() {
     document.querySelectorAll('.ui-state-default').forEach(e => e.addEventListener("mousedown", clickHandler));
     document.addEventListener("keydown", currentMino);
     document.addEventListener("mouseup", getMinoList());
+}
+
+// display the toast
+function displayToast(id){
+    var toast = document.getElementById(id);
+    toast.classList.add("show");
+    setTimeout(function(){
+        toast.classList.remove("show");; 
+    }, 3000);
 }
 
 // this function counts the occupied minos in a row
@@ -57,19 +64,19 @@ function copyText() {
     textarea.select();
     document.execCommand("copy");
 
-    // show the toast (snackbar)
-    var x = document.getElementById("snackbar");
-    x.className = "show";
-    setTimeout(function(){ x.className = x.className.replace("show", ""); }, 3000);
+    // show the toast (minos copied)
+    displayToast("minoAdded");
 }
 
 const checkbox = document.getElementById("allowConfig");
 const vramgrid = document.getElementById("vramgrid");
 checkbox.addEventListener("change", function() {
     if (this.checked) {
-        //vramgrid.style.display = "none";
+        // make vramgrid border grey
+        document.getElementById("vramgrid").style.borderColor = "rgb(224, 224, 224)";
     } else {
-        //vramgrid.style.display = "grid";
+        // make vramgrid border green
+        document.getElementById("vramgrid").style.borderColor = "rgb(158, 210, 144)";
         let selectedCell = document.querySelector('.cell.selected');
         let selectedCellId = selectedCell.id;
         currentMino = selectedCellId.toUpperCase();
@@ -141,12 +148,14 @@ for (let i = 0; i < 256; i++) {
         this.classList.add("selected");
         changeBg(this.id, "grey");
         currentMino = this.id;
+        document.getElementById("allowConfig").checked = false;
+        document.getElementById("vramgrid").style.borderColor = "rgb(158, 210, 144)";
   };
   document.querySelector(".vramgrid").appendChild(cell);
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// change that!!! remove if you press ctrl
+// Given the user selectiom, add minos to the playfield
+// TODO: Ctrl-key inverses remove <-> add (green and red border)
 $( function(){
     $("#selectable").selectable({
         stop: function(){
@@ -155,13 +164,16 @@ $( function(){
             $(".ui-selected", this).each(function(i, el){
                 if(document.getElementById("allowConfig").checked) currentMino = getRandomMino();
                 if(i === 0 && this.classList.contains("mino")) remove = true;
-                //if(i === 0 && this.classList.contains("mino") && event.ctrlKey) remove = true;
                 if(!this.classList.contains("noStack")){
                     if(remove){
-                        this.classList.remove(mino);
-                        $(el).find('img').attr('src', 'images/green/' + emptyMino + '.png');
-                    }
-                    else{
+                        //if(event.ctrlKey){
+                        //    this.classList.add(mino);
+                        //    $(el).find('img').attr('src', 'images/green/' + currentMino + '.png');    
+                        //}else{
+                            this.classList.remove(mino);    
+                            $(el).find('img').attr('src', 'images/green/' + emptyMino + '.png');
+                        //}
+                    }else{
                         this.classList.add(mino);
                         $(el).find('img').attr('src', 'images/green/' + currentMino + '.png');
                     }
@@ -171,16 +183,22 @@ $( function(){
             // update the mino list
             getMinoList();
             
-            // check each row and make sure it won't clear immediately
+            // check each row and make sure it's not full
             let nMino;
+            let isFull = false;
             for(let i=1; i<=10; i++){
                 nMino = countMinoInRow(i); 
                 let rows = document.getElementsByClassName("row-" + i);
                 if(nMino == 10){
                     for(let j = 0; j < rows.length; j++) rows[j].classList.add("clear");
+                    isFull = true;
                 }else{
                     for(let j = 0; j < rows.length; j++) rows[j].classList.remove("clear");
                 }
+            }
+            if(isFull){    
+                // show toast (full rows)
+                displayToast("rowsFull");
             }
         }
     });  
