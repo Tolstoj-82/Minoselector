@@ -3,6 +3,7 @@
     <link rel="stylesheet" href="style.css">
     <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
     <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
+    <script src="playfields.js"></script>
     <!--
     <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js" integrity="sha256-YEBENHBDbX5CjOiB/JMR1f+Cv2gQI5F0/Kj2RZaEQY=" crossorigin="anonymous"></script>
     -->
@@ -57,12 +58,24 @@
             <p><button onclick="copyText();" class="button">Copy stack to clipboard</button></p>
           </div>
           <h3>Import CSV</h3>
+          <select id="dropdown" class="dropdown">
+            <option value="">--Chose a field--</option>>
+            <script>
+              for (var i = 0; i < playfields.length; i++) {
+                var item = playfields[i];
+                var display = item.split("|")[0];
+                var value = item.split("|")[1];
+                var option = "<option value='" + value + "'>" + display + "</option>";
+                document.getElementById("dropdown").innerHTML += option;
+              }
+            </script>
+          </select>
           <div>
             <p><textarea id="importCsv" style="width:870px; height:60px;"></textarea></p>
             <p><button onclick="csvToPlayfield(importCsv);" class="button">Import data</button></p>
           </div>
         
-        <p>TOLSTOJ and TONI 2023, with some help of -JJ</p>
+        <p>TOLSTOJ 2023 (with some help and TONI, -JJ and ChatGPT)</p>
       </div>
     </div>
   </div>

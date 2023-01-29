@@ -1,6 +1,14 @@
+///////////////////////////////////////////////////////////////////////////////
+//
+// TOLSTOJ 2023 (with some help of Chat GPT)
+//
+///////////////////////////////////////////////////////////////////////////////
+
 // TODOs
-// * make sure if ctrl is pressed, it adds minos regardless
+// * Reposition HTML elements
 // * no need for the text area (maybe in a accordion)
+// * Make the things responsive - e.g. change the minosize to 16 if the screen is too small
+// * make sure if ctrl is pressed, it adds minos regardless
 
 /*******************************************************************************
  (1) GLOBAL VARIABLES AND INITIAL SET-UP
@@ -16,12 +24,20 @@ document.addEventListener("DOMContentLoaded", function() {
     addMatrix();
     document.querySelectorAll('.ui-state-default').forEach(e => e.addEventListener("mousedown", clickHandler));
     document.addEventListener("keydown", currentMino);
-    document.addEventListener("mouseup", getMinoList());
+    document.addEventListener("mouseup", getMinoList()); // this should only be applied to the playfield!
 });
 
 /*******************************************************************************
  (2) EVENT LISTENERS
 *******************************************************************************/
+
+// selected playfield to textarea
+
+document.getElementById("dropdown").addEventListener("change", function() {
+    var value = this.value.trim(); // remove leading and trailing spaces from value
+    document.getElementById("importCsv").value = ""; // empty the textarea
+    document.getElementById("importCsv").value += value + "\n"; // add selected value to textarea
+});
 
 // Checkbox (check / uncheck)
 const checkbox = document.getElementById("allowConfig");
@@ -188,7 +204,7 @@ function addMatrix(){
 function actualImport(values, textarea){
         // remove all classes except stack and ui-selectee
         $('.stack').removeClass(function(index, className) {
-            return (className.match(/(^|\s)(?!ui-selectee|stack)\S+/g) || []).join(' ');
+            return (className.match(/(^|\s)(?!ui-selectee|stack|row-)\S+/g) || []).join(' ');
         });
     
         // Loop through the stack and add the image
@@ -199,7 +215,7 @@ function actualImport(values, textarea){
             img.src = "images/green/" + values[i] + ".png";
     
             //div.classList.add("ui-selectee");
-            if(values[i] != "2F") div.classList.add("mino");
+            if(values[i].toUpperCase() != emptyMino) div.classList.add("mino");
         }
     
         displayToast("successImport");
@@ -219,7 +235,7 @@ function csvToPlayfield(textarea) {
     }
     var minoDivs = document.getElementsByClassName("stack mino");
     if (minoDivs.length > 0){
-        var confirm = window.confirm("Your current playfield is overwritten. Continue?");
+        var confirm = window.confirm("Your current playfield will be overwritten. Continue?");
         if (confirm == true){
             actualImport(values, textarea);
         }
@@ -228,10 +244,7 @@ function csvToPlayfield(textarea) {
     }
 }
 
-/*******************************************************************************
- (4) START OF THE PROGRAM
-*******************************************************************************/
-
+// That should be inside a function, maybe?
 // Create the VRAM Grid (right)
 for (let i = 0; i < 256; i++) {
     let hexId = i.toString(16).padStart(2, "0");
@@ -276,7 +289,9 @@ $( function(){
                             $(el).find('img').attr('src', 'images/green/' + emptyMino + '.png');
                         //}
                     }else{
-                        this.classList.add(mino);
+                        // make sure 2F is not treated as a mino
+                        if(currentMino.toUpperCase() == emptyMino) this.classList.remove(mino);
+                        else this.classList.add(mino);
                         $(el).find('img').attr('src', 'images/green/' + currentMino + '.png');
                     }
                 }
