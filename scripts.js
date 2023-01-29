@@ -3,6 +3,9 @@
 // * no need for the text area (maybe in a accordion)
 // * import functionality
 
+/*******************************************************************************
+ (1) GLOBAL VARIABLES AND INITIAL SET-UP
+*******************************************************************************/
 // global variable defines which mino will be added when you press in the playfield 
 var currentMino = "80";
 let emptyMino = "2F";
@@ -17,57 +20,11 @@ document.addEventListener("DOMContentLoaded", function() {
     document.addEventListener("mouseup", getMinoList());
 });
 
-// display the toast
-function displayToast(id){
-    var toast = document.getElementById(id);
-    toast.classList.add("show");
-    setTimeout(function(){
-        toast.classList.remove("show");; 
-    }, 3000);
-}
+/*******************************************************************************
+ (2) EVENT LISTENERS
+*******************************************************************************/
 
-// this function counts the occupied minos in a row
-function countMinoInRow(rowNumber) {
-    var minoCount = 0;
-    var elements = document.getElementsByClassName("row-" + rowNumber);
-    for (var i = 0; i < elements.length; i++) {
-        if (elements[i].classList.contains("mino")) {
-            minoCount++;
-        }
-    }
-    return minoCount;
-}
-
-//select Ramdom Minotype
-function getRandomMino(){
-    return (Math.floor(Math.random() * 8) + 80).toString();
-}
-
-// add the values to the textarea
-function getMinoList() {
-    let imageNames = "";
-    let stackCells = document.querySelectorAll(".stack");
-    stackCells.forEach(function(cell) {
-        let cellImage = cell.querySelector("img").src;
-        let startIndex = cellImage.indexOf("green/") + 6;
-        let endIndex = cellImage.indexOf(".png");
-        let imageName = cellImage.substring(startIndex, endIndex).toUpperCase();
-        imageNames += imageName + ",";
-    });
-    let minoList = document.querySelector("#minoList");
-    minoList.value = imageNames.slice(0, -1);
-}
-
-// this function copies the contents from the textarea into the clipboard
-function copyText() {
-    let textarea = document.getElementById("minoList");
-    textarea.select();
-    document.execCommand("copy");
-
-    // show the toast (minos copied)
-    displayToast("minoAdded");
-}
-
+// Checkbox (check / uncheck)
 const checkbox = document.getElementById("allowConfig");
 const vramgrid = document.getElementById("vramgrid");
 checkbox.addEventListener("change", function() {
@@ -83,22 +40,7 @@ checkbox.addEventListener("change", function() {
     }
 });
 
-// this function changes the image
-// > green -> grey: color = 'grey'
-// > grey -> green: color = 'green'
-function changeBg(id, toColor) {
-    let cell = document.getElementById(id);
-    let currentBg = cell.style.backgroundImage;
-    if (toColor == "green") {
-        let newBg = currentBg.replace("green", "grey");
-        cell.style.backgroundImage = newBg;
-    } else if (toColor == "grey") {
-        let newBg = currentBg.replace("grey", "green");
-        cell.style.backgroundImage = newBg;
-    }
-}
- 
-// When certain keys are pressed, select the corresponding cells
+// Key presses
 document.addEventListener("keydown", function(event) {
         //alert(event.code);
         let cell = null;
@@ -130,7 +72,148 @@ document.addEventListener("keydown", function(event) {
         }
 });
 
-// Create the vram-grid (right)
+/*******************************************************************************
+ (2) FUNCTIONS
+*******************************************************************************/
+
+// display the toast
+function displayToast(id){
+    var toast = document.getElementById(id);
+    toast.classList.add("show");
+    setTimeout(function(){
+        toast.classList.remove("show");; 
+    }, 3000);
+}
+
+// counts the occupied minos in a row
+function countMinoInRow(rowNumber) {
+    var minoCount = 0;
+    var elements = document.getElementsByClassName("row-" + rowNumber);
+    for (var i = 0; i < elements.length; i++) {
+        if (elements[i].classList.contains("mino")) {
+            minoCount++;
+        }
+    }
+    return minoCount;
+}
+
+//select Ramdom Minotype
+function getRandomMino(){
+    return (Math.floor(Math.random() * 8) + 80).toString();
+}
+
+// add the mino list to the textarea
+function getMinoList() {
+    let imageNames = "";
+    let stackCells = document.querySelectorAll(".stack");
+    stackCells.forEach(function(cell) {
+        let cellImage = cell.querySelector("img").src;
+        let startIndex = cellImage.indexOf("green/") + 6;
+        let endIndex = cellImage.indexOf(".png");
+        let imageName = cellImage.substring(startIndex, endIndex).toUpperCase();
+        imageNames += imageName + ",";
+    });
+    let minoList = document.querySelector("#minoList");
+    minoList.value = imageNames.slice(0, -1);
+}
+
+// copy the textarea to the clipboard
+function copyText() {
+    let textarea = document.getElementById("minoList");
+    textarea.select();
+    document.execCommand("copy");
+
+    // show the toast (minos copied)
+    displayToast("minoAdded");
+}
+
+// changes the image in the VRAM Grid
+// > green -> grey: color = 'grey'
+// > grey -> green: color = 'green'
+function changeBg(id, toColor) {
+    let cell = document.getElementById(id);
+    let currentBg = cell.style.backgroundImage;
+    if (toColor == "green") {
+        let newBg = currentBg.replace("green", "grey");
+        cell.style.backgroundImage = newBg;
+    } else if (toColor == "grey") {
+        let newBg = currentBg.replace("grey", "green");
+        cell.style.backgroundImage = newBg;
+    }
+}
+
+// create the playfield
+function addMatrix(){
+    ol = document.getElementById("selectable");
+    rows = 18;
+    cols = 10;
+    currentRow = 1;
+    currentCol = 0;
+ 
+    for(i=1; i<=180; i++){
+        li = document.createElement("li");
+
+            if(i<=80){
+                li.classList.add("noStack");
+            }else{
+                let img = document.createElement("img");
+                img.src = "images/green/" + emptyMino + ".png";
+                li.appendChild(img);
+                li.classList.add("stack");
+                li.classList.add("row-"+(currentRow-8));
+            }
+        ol.appendChild(li);
+        
+        currentCol++;
+        
+        // create a new row
+        if(currentCol == 10){
+            currentCol = 0;
+            currentRow++;
+        }
+    }
+    getMinoList();
+}
+
+// import a CSV file
+function csvToPlayfield(textarea) {
+  
+    // Split the csv data into an array of values
+    var data = textarea.value;
+    var values = data.split(',');
+
+    // check if the number of values is 100 and if each value is a 2-digit hexadecimal number
+    if (values.length !== 100 || !values.every(val => /^[0-9A-F]{2}$/i.test(val.trim())) ) {
+        displayToast("errorImport");
+        return;
+    }
+
+    // remove all classes excpt stack and ui-selectee
+    $('.stack').removeClass(function(index, className) {
+        return (className.match(/(^|\s)(?!ui-selectee|stack)\S+/g) || []).join(' ');
+    });
+
+    // Loop through the stack and add the image
+    var stackDivs = document.getElementsByClassName("stack");    
+    for (var i = 0; i < stackDivs.length; i++) {
+        var div = stackDivs[i];
+        var img = div.getElementsByTagName("img")[0];
+        img.src = "images/green/" + values[i] + ".png";
+
+        //div.classList.add("ui-selectee");
+        if(values[i] != "2F") div.classList.add("mino");
+    }
+
+    displayToast("successImport");
+    getMinoList();
+    textarea.value = "";
+}
+
+/*******************************************************************************
+ (4) START OF THE PROGRAM
+*******************************************************************************/
+
+// Create the VRAM Grid (right)
 for (let i = 0; i < 256; i++) {
     let hexId = i.toString(16).padStart(2, "0");
     let cell = document.createElement("div");
@@ -204,6 +287,7 @@ $( function(){
     });  
 });
 
+// what is this needed for?
 // assign a new class to a clicked mino
 function clickHandler() {
 
@@ -215,66 +299,4 @@ function clickHandler() {
     if(classList.includes("mino")){
         val = "255,255,255,0.8";
     }
-}
-
-// add the playfield matrix
-function addMatrix(){
-    ol = document.getElementById("selectable");
-    rows = 18;
-    cols = 10;
-    currentRow = 1;
-    currentCol = 0;
- 
-    for(i=1; i<=180; i++){
-        li = document.createElement("li");
-
-            if(i<=80){
-                li.classList.add("noStack");
-            }else{
-                let img = document.createElement("img");
-                img.src = "images/green/" + emptyMino + ".png";
-                li.appendChild(img);
-                li.classList.add("stack");
-                li.classList.add("row-"+(currentRow-8));
-            }
-        ol.appendChild(li);
-        
-        currentCol++;
-        
-        // create a new row
-        if(currentCol == 10){
-            currentCol = 0;
-            currentRow++;
-        }
-    }
-    getMinoList();
-}
-
-// import a CSV file
-function csvToPlayfield(textarea) {
-  
-    // Split the csv data into an array of values
-    var data = textarea.value;
-    var values = data.split(',');
-  
-    // check if the number of values is 100 and if each value is a 2-digit hexadecimal number
-    if (values.length !== 100 || !values.every(val => /^[0-9A-F]{2}$/i.test(val.trim())) ) {
-        displayToast("errorImport");
-      return;
-    }
-    
-    // Loop through the stack and add the image
-    var stackDivs = document.getElementsByClassName("stack");
-    for (var i = 0; i < stackDivs.length; i++) {
-      var div = stackDivs[i];
-      var img = div.getElementsByTagName("img")[0];
-      img.src = "images/green/" + values[i] + ".png";
-      div.classList.add("ui-selectee");
-      div.classList.add("mino");
-    }
-
-    displayToast("successImport");
-    getMinoList();
-    textarea.value = "";
-  }
-  
+} 
