@@ -6,6 +6,7 @@
 
 // TODOs
 // * no need for the text area (maybe in a accordion) [kinda, but the solution is not bullet-proof]
+// * when check box is checked, no mino should be selected
 // * Make the things responsive - e.g. change the minosize to 16 if the screen is too small
 // * make sure if ctrl is pressed, it adds minos regardless
 
@@ -22,10 +23,6 @@ document.addEventListener("DOMContentLoaded", function() {
     document.getElementById("80").click();
     getDropdownOptions();
     addMatrix();
-    // are these even needed anymore? I guess not
-    //document.querySelectorAll('.ui-state-default').forEach(e => e.addEventListener("mousedown", clickHandler));
-    //document.addEventListener("keydown", currentMino);
-    //document.addEventListener("mouseup", getMinoList()); // this should only be applied to the playfield!
 });
 
 /*******************************************************************************
@@ -91,6 +88,8 @@ document.addEventListener("keydown", function(event) {
 /*******************************************************************************
  (2) FUNCTIONS
 *******************************************************************************/
+
+// displays the pre-defined playfields (in playfields.js) 
 function getDropdownOptions(){
     for (var i = 0; i < playfields.length; i++) {
         var item = playfields[i];
@@ -101,7 +100,7 @@ function getDropdownOptions(){
     }
 }
 
-// display the toast
+// display a toast
 // if it is called because rows are full, it waits 10 seconds before it's called again 
 let canCall = true;
 function displayToast(id) {
@@ -214,7 +213,7 @@ function addMatrix(){
 
 // import a CSV file
 function actualImport(values, textarea){
-        // remove all classes except stack and ui-selectee
+        // remove all classes except stack, ui-selectee and row-{#}
         $('.stack').removeClass(function(index, className) {
             return (className.match(/(^|\s)(?!ui-selectee|stack|row-)\S+/g) || []).join(' ');
         });

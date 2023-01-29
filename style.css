@@ -236,11 +236,6 @@ body{
     background-color: white;
   }
 
-  .ui-selecting .mino img{
-    /*opacity: 10%;
-    background-color: rgb(0, 0, 0);*/
-  }
-
   /* the part of the playfield that can't be edited */
 .noStack, .noStack:hover{
     background-color: #999;
@@ -326,6 +321,8 @@ body{
   background-repeat: no-repeat;
   background-position: right 10px center;
   background-size: auto 50%;
+  cursor: pointer;
+  width: 250px;
 }
   
   .dropdown::-ms-expand {
