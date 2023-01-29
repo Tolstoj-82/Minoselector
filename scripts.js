@@ -1,7 +1,7 @@
 // TODOs
+// * make a global timer that makes sure the toast for the clear check is not called within 10 seconds
 // * make sure if ctrl is pressed, it adds minos regardless
 // * no need for the text area (maybe in a accordion)
-// * import functionality
 
 /*******************************************************************************
  (1) GLOBAL VARIABLES AND INITIAL SET-UP
@@ -77,12 +77,22 @@ document.addEventListener("keydown", function(event) {
 *******************************************************************************/
 
 // display the toast
-function displayToast(id){
+// if it is called because rows are full, it waits 10 seconds before it's called again 
+let canCall = true;
+function displayToast(id) {
+  if (id !== 'rowsFull' || canCall) {
+    if (id === 'rowsFull') {
+      canCall = false;
+      setTimeout(() => {
+        canCall = true;
+      }, 10000);
+    }
     var toast = document.getElementById(id);
     toast.classList.add("show");
-    setTimeout(function(){
-        toast.classList.remove("show");; 
+    setTimeout(function() {
+      toast.classList.remove("show");
     }, 3000);
+  }
 }
 
 // counts the occupied minos in a row
