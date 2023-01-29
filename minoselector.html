@@ -35,7 +35,8 @@
                     If any row of your garbage is full, it will clear immediately once the game starts.
                 </p>
                 <p>
-                  You can also load a stack by copying a CSV file to the Textarea (Import CSV).
+                  You can also load a stack by copying a CSV file to the Textarea (Import CSV).<br>
+                  You can also choose from pre-defined boards using the dropdown selection. 
                 </p>
             </span>
           </div>
@@ -55,7 +56,7 @@
           <h3>Current playfield (read-only)</h3>
           <div>
             <p><textarea id="minoList" readonly style="width:870px; height:60px;"></textarea></p>
-            <p><button onclick="copyText();" class="button">Copy stack to clipboard</button></p>
+            <p><button onclick="copyText();" class="button">Copy playfield to clipboard</button></p>
           </div>
           <h3>Import CSV</h3>
           <select id="dropdown" class="dropdown">
@@ -72,7 +73,7 @@
           </select>
           <div>
             <p><textarea id="importCsv" style="width:870px; height:60px;"></textarea></p>
-            <p><button onclick="csvToPlayfield(importCsv);" class="button">Import data</button></p>
+            <p><button onclick="csvToPlayfield(importCsv);" class="button">Load playfield</button></p>
           </div>
         
         <p>TOLSTOJ 2023 (with some help and TONI, -JJ and ChatGPT)</p>
