@@ -305,17 +305,3 @@ $( function(){
         }
     });  
 });
-
-// what is this needed for?
-// assign a new class to a clicked mino
-function clickHandler() {
-
-    thisEl = document.getElementById(this.id);
-    classList = thisEl.className;
-
-    // this is not in use... keep it?
-    val = "0,0,0,0.5";
-    if(classList.includes("mino")){
-        val = "255,255,255,0.8";
-    }
-} 
