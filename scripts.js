@@ -164,16 +164,14 @@ function copyText() {
 }
 
 // changes the image in the VRAM Grid
-// > green -> grey: color = 'grey'
-// > grey -> green: color = 'green'
 function changeBg(id, toColor) {
     let cell = document.getElementById(id);
     let currentBg = cell.style.backgroundImage;
     if (toColor == "green") {
-        let newBg = currentBg.replace("green", "grey");
+        let newBg = currentBg.replace("green", "grey"); //color => 'grey'
         cell.style.backgroundImage = newBg;
     } else if (toColor == "grey") {
-        let newBg = currentBg.replace("grey", "green");
+        let newBg = currentBg.replace("grey", "green"); //color => 'green'
         cell.style.backgroundImage = newBg;
     }
 }
@@ -213,26 +211,28 @@ function addMatrix(){
 
 // import a CSV file
 function actualImport(values, textarea){
-        // remove all classes except stack, ui-selectee and row-{#}
-        $('.stack').removeClass(function(index, className) {
-            return (className.match(/(^|\s)(?!ui-selectee|stack|row-)\S+/g) || []).join(' ');
-        });
-    
-        // Loop through the stack and add the image
-        var stackDivs = document.getElementsByClassName("stack");    
-        for (var i = 0; i < stackDivs.length; i++) {
-            var div = stackDivs[i];
-            var img = div.getElementsByTagName("img")[0];
-            img.src = "images/green/" + values[i] + ".png";
-    
-            //div.classList.add("ui-selectee");
-            if(values[i].toUpperCase() != emptyMino) div.classList.add("mino");
-        }
-    
-        displayToast("successImport");
-        getMinoList();
-        textarea.value = "";
+        
+    // remove all classes except stack, ui-selectee and row-{#}
+    $('.stack').removeClass(function(index, className) {
+        return (className.match(/(^|\s)(?!ui-selectee|stack|row-)\S+/g) || []).join(' ');
+    });
+
+    // Loop through the stack and add the image
+    var stackDivs = document.getElementsByClassName("stack");    
+    for (var i = 0; i < stackDivs.length; i++) {
+        var div = stackDivs[i];
+        var img = div.getElementsByTagName("img")[0];
+        img.src = "images/green/" + values[i] + ".png";
+
+        //div.classList.add("ui-selectee");
+        if(values[i].toUpperCase() != emptyMino) div.classList.add("mino");
+    }
+
+    displayToast("successImport");
+    getMinoList();
+    textarea.value = "";
 }
+
 function csvToPlayfield(textarea) {
   
     // Split the csv data into an array of values
@@ -255,7 +255,7 @@ function csvToPlayfield(textarea) {
     }
 }
 
-// That should be inside a function, maybe?
+// Should that be inside a function?
 // Create the VRAM Grid (right)
 for (let i = 0; i < 256; i++) {
     let hexId = i.toString(16).padStart(2, "0");
@@ -280,7 +280,7 @@ for (let i = 0; i < 256; i++) {
   document.querySelector(".vramgrid").appendChild(cell);
 }
 
-// Given the user selectiom, add minos to the playfield
+// Given the user selection, add minos to the playfield
 // TODO: Ctrl-key inverses remove <-> add (green and red border)
 $( function(){
     $("#selectable").selectable({
