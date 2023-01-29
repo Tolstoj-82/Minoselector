@@ -1,5 +1,4 @@
 // TODOs
-// * make a global timer that makes sure the toast for the clear check is not called within 10 seconds
 // * make sure if ctrl is pressed, it adds minos regardless
 // * no need for the text area (maybe in a accordion)
 
@@ -186,6 +185,27 @@ function addMatrix(){
 }
 
 // import a CSV file
+function actualImport(values, textarea){
+        // remove all classes except stack and ui-selectee
+        $('.stack').removeClass(function(index, className) {
+            return (className.match(/(^|\s)(?!ui-selectee|stack)\S+/g) || []).join(' ');
+        });
+    
+        // Loop through the stack and add the image
+        var stackDivs = document.getElementsByClassName("stack");    
+        for (var i = 0; i < stackDivs.length; i++) {
+            var div = stackDivs[i];
+            var img = div.getElementsByTagName("img")[0];
+            img.src = "images/green/" + values[i] + ".png";
+    
+            //div.classList.add("ui-selectee");
+            if(values[i] != "2F") div.classList.add("mino");
+        }
+    
+        displayToast("successImport");
+        getMinoList();
+        textarea.value = "";
+}
 function csvToPlayfield(textarea) {
   
     // Split the csv data into an array of values
@@ -197,26 +217,15 @@ function csvToPlayfield(textarea) {
         displayToast("errorImport");
         return;
     }
-
-    // remove all classes excpt stack and ui-selectee
-    $('.stack').removeClass(function(index, className) {
-        return (className.match(/(^|\s)(?!ui-selectee|stack)\S+/g) || []).join(' ');
-    });
-
-    // Loop through the stack and add the image
-    var stackDivs = document.getElementsByClassName("stack");    
-    for (var i = 0; i < stackDivs.length; i++) {
-        var div = stackDivs[i];
-        var img = div.getElementsByTagName("img")[0];
-        img.src = "images/green/" + values[i] + ".png";
-
-        //div.classList.add("ui-selectee");
-        if(values[i] != "2F") div.classList.add("mino");
+    var minoDivs = document.getElementsByClassName("stack mino");
+    if (minoDivs.length > 0){
+        var confirm = window.confirm("Your current playfield is overwritten. Continue?");
+        if (confirm == true){
+            actualImport(values, textarea);
+        }
+    }else{
+        actualImport(values, textarea);
     }
-
-    displayToast("successImport");
-    getMinoList();
-    textarea.value = "";
 }
 
 /*******************************************************************************
