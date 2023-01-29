@@ -5,8 +5,7 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 // TODOs
-// * Reposition HTML elements
-// * no need for the text area (maybe in a accordion)
+// * no need for the text area (maybe in a accordion) [kinda, but the solution is not bullet-proof]
 // * Make the things responsive - e.g. change the minosize to 16 if the screen is too small
 // * make sure if ctrl is pressed, it adds minos regardless
 
@@ -156,8 +155,10 @@ function getMinoList() {
 // copy the textarea to the clipboard
 function copyText() {
     let textarea = document.getElementById("minoList");
+    textarea.style.display = "block";
     textarea.select();
     document.execCommand("copy");
+    textarea.style.display = "none";
 
     // show the toast (minos copied)
     displayToast("minoAdded");

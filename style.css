@@ -2,26 +2,31 @@
  GENERAL STYLINGS
 *************************************************************/
 body{
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    color: #FFF;
-    background-color: #333;
-    width: 100%;
-    overflow-y: scroll;
-    margin-left: 20;
-    align-items: center;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: #FFF;
+  background-color: #333;
+  width: 100%;
+  overflow-y: scroll;
+  margin-left: 20;
+  align-items: center;
 }
-
+  
 .container {
-    display: flex;
-    margin: auto;
-    width: fit-content;
+  display: flex;
+  margin: auto;
+  width: fit-content;
+}
+  
+.vramgrid {
+  width: 600px;
+}
+  
+.spacing {
+  width: 30px;
 }
 
-.vramgrid {
-    width: 600px;
-}
-.spacing {
-    width: 30px;
+.playfieldgrid {
+  text-align: center;
 }
 
 .tooltip-container {
@@ -37,6 +42,11 @@ body{
   margin: auto;
   width: fit-content;
   flex-direction: column;
+}
+
+#minolist, #importCsv{
+  width:870px; 
+  height:60px; 
 }
 
 /************************************************************
@@ -305,14 +315,18 @@ body{
     border: 2px solid white;
   }
 
-  .dropdown {
-    appearance: none;
-    background-color: #fff;
-    color: #333;
-    padding: 10px 15px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-  }
+.dropdown {
+  appearance: none;
+  background-color: #fff;
+  color: #333;
+  padding: 10px 15px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  background-image: url("images/arrow_down.png");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  background-size: auto 50%;
+}
   
   .dropdown::-ms-expand {
     display: none;

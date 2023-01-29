@@ -30,41 +30,50 @@
                     You can also make the minotype random by checking the checkbox below.
                 </p>
                 <p>
-                    <b>Info:</b><br>
-                    The stack is fully rendered only if you chose height 5. Only the top parts are rendered if you chose height 1-4 and nothing is shown with height 0.<br>
-                    If any row of your garbage is full, it will clear immediately once the game starts.
+                  <b>Load a board</b><br>
+                  You can load a playfield by copying a CSV file to the Textarea (Import CSV)<br>
+                  Or by choosing from pre-defined boards (dropdown selection). 
                 </p>
                 <p>
-                  You can also load a stack by copying a CSV file to the Textarea (Import CSV).<br>
-                  You can also choose from pre-defined boards using the dropdown selection. 
-                </p>
+                  <b>Info:</b><br>
+                  The stack is fully rendered only if you chose height 5. Only the top parts are rendered if you chose height 1-4 and nothing is shown with height 0.<br>
+                  If any row of your garbage is full, it will clear immediately once the game starts.
+              </p>
             </span>
           </div>
         </div>
       </p>
       <div class="container">
-          <div class="playfieldgrid"></div>  
+        <div class="playfieldgrid">
           <ol id="selectable"></ol>
-          <div class="spacing">&nbsp;</div>
+          <button onclick="copyText();" class="button">Copy playfield data to clipboard</button>
+        </div>
+        <div class="spacing">&nbsp;</div>
+        <div class="playfieldgrid">
           <div class="vramgrid" id="vramgrid"></div>
+          <p>
+            <input type="checkbox" id="allowConfig" class="checkbox" checked>
+            <label for="allowConfig" class="label">Use random minos (0x80 - 0x87)</label>
+            </p>
+        </div>
       </div>
       <div id="config-container">
         <p>
-          <input type="checkbox" id="allowConfig" class="checkbox" checked>
-            <label for="allowConfig" class="label">Use random minos (0x80 - 0x87)</label>
+
         </p> 
-          <h3>Current playfield (read-only)</h3>
+          <!--<h3>Current playfield (read-only)</h3>-->
           <div>
-            <p><textarea id="minoList" readonly style="width:870px; height:60px;"></textarea></p>
-            <p><button onclick="copyText();" class="button">Copy playfield to clipboard</button></p>
+            <p><textarea id="minoList" readonly style="display: none;"></textarea></p>
           </div>
-          <h3>Import CSV</h3>
-          <select id="dropdown" class="dropdown">
-            <option value="">--Chose a field--</option>
-          </select>
+          <!--<h3>Load a playfield</h3>-->
+          <div class="SideBySide">
+            <select id="dropdown" class="dropdown">
+              <option value="">--Chose a field--</option>            
+            </select>
+            <button onclick="csvToPlayfield(importCsv);" class="button">Load playfield</button>
+          </div>
           <div>
-            <p><textarea id="importCsv" style="width:870px; height:60px;"></textarea></p>
-            <p><button onclick="csvToPlayfield(importCsv);" class="button">Load playfield</button></p>
+            <p><textarea id="importCsv"></textarea></p>
           </div>
         
         <p>TOLSTOJ 2023 (with some help of TONI, -JJ and ChatGPT)</p>
