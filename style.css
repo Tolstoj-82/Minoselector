@@ -264,7 +264,7 @@ body{
     border-radius: 4px;
     background: #fff no-repeat center center;
   }
-  
+
   input[type="radio"]{
     border-radius : 50%;
   }
@@ -285,6 +285,7 @@ body{
   input[type="radio"]:checked{
     background-image : url('images/radio.svg');
   }
+
   .button {
     background-color: lightgrey;
     border: 2px solid lightgray;
@@ -302,4 +303,22 @@ body{
   .button:hover {
     background-color: grey;
     border: 2px solid white;
+  }
+
+  .dropdown {
+    appearance: none;
+    background-color: #fff;
+    color: #333;
+    padding: 10px 15px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+  }
+  
+  .dropdown::-ms-expand {
+    display: none;
+  }
+  
+  .dropdown option {
+    color: #333;
+    background-color: #fff;
   }
