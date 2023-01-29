@@ -60,23 +60,14 @@
           </div>
           <h3>Import CSV</h3>
           <select id="dropdown" class="dropdown">
-            <option value="">--Chose a field--</option>>
-            <script>
-              for (var i = 0; i < playfields.length; i++) {
-                var item = playfields[i];
-                var display = item.split("|")[0];
-                var value = item.split("|")[1];
-                var option = "<option value='" + value + "'>" + display + "</option>";
-                document.getElementById("dropdown").innerHTML += option;
-              }
-            </script>
+            <option value="">--Chose a field--</option>
           </select>
           <div>
             <p><textarea id="importCsv" style="width:870px; height:60px;"></textarea></p>
             <p><button onclick="csvToPlayfield(importCsv);" class="button">Load playfield</button></p>
           </div>
         
-        <p>TOLSTOJ 2023 (with some help and TONI, -JJ and ChatGPT)</p>
+        <p>TOLSTOJ 2023 (with some help of TONI, -JJ and ChatGPT)</p>
       </div>
     </div>
   </div>

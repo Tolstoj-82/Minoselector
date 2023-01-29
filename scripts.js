@@ -21,10 +21,12 @@ let emptyMino = "2F";
 document.addEventListener("DOMContentLoaded", function() {
 //window.onload = function() {
     document.getElementById("80").click();
+    getDropdownOptions();
     addMatrix();
-    document.querySelectorAll('.ui-state-default').forEach(e => e.addEventListener("mousedown", clickHandler));
-    document.addEventListener("keydown", currentMino);
-    document.addEventListener("mouseup", getMinoList()); // this should only be applied to the playfield!
+    // are these even needed anymore? I guess not
+    //document.querySelectorAll('.ui-state-default').forEach(e => e.addEventListener("mousedown", clickHandler));
+    //document.addEventListener("keydown", currentMino);
+    //document.addEventListener("mouseup", getMinoList()); // this should only be applied to the playfield!
 });
 
 /*******************************************************************************
@@ -90,6 +92,15 @@ document.addEventListener("keydown", function(event) {
 /*******************************************************************************
  (2) FUNCTIONS
 *******************************************************************************/
+function getDropdownOptions(){
+    for (var i = 0; i < playfields.length; i++) {
+        var item = playfields[i];
+        var display = item.split("|")[0];
+        var value = item.split("|")[1];
+        var option = "<option value='" + value + "'>" + display + "</option>";
+        document.getElementById("dropdown").innerHTML += option;
+    }
+}
 
 // display the toast
 // if it is called because rows are full, it waits 10 seconds before it's called again 
