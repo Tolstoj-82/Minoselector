@@ -5,7 +5,7 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 // TODOs
-// * no need for the text area (maybe in a accordion) [kinda, but the solution is not bullet-proof]
+// * changeBg and toggleColor into one function?
 // * Make the things responsive - e.g. change the minosize to 16 if the screen is too small
 // * make sure if ctrl is pressed, it adds minos regardless
 
@@ -29,7 +29,6 @@ document.addEventListener("DOMContentLoaded", function() {
 *******************************************************************************/
 
 // selected playfield to textarea
-
 document.getElementById("dropdown").addEventListener("change", function() {
     var value = this.value.trim(); // remove leading and trailing spaces from value
     document.getElementById("importCsv").value = ""; // empty the textarea
@@ -95,6 +94,38 @@ document.addEventListener("keydown", function(event) {
  (2) FUNCTIONS
 *******************************************************************************/
 
+// counts the occupied minos in a row (1 of 2)
+function countMinoInRow(rowNumber) {
+    var minoCount = 0;
+    var elements = document.getElementsByClassName("row-" + rowNumber);
+    for (var i = 0; i < elements.length; i++) {
+        if (elements[i].classList.contains("mino")) {
+            minoCount++;
+        }
+    }
+    return minoCount;
+}
+// checks all rows (2 of 2)
+function checkAllRows(){
+    // check each row and make sure it's not full
+    let nMino;
+    let isFull = false;
+    for(let i=1; i<=10; i++){
+        nMino = countMinoInRow(i); 
+        let rows = document.getElementsByClassName("row-" + i);
+        if(nMino == 10){
+            for(let j = 0; j < rows.length; j++) rows[j].classList.add("clear");
+            isFull = true;
+        }else{
+            for(let j = 0; j < rows.length; j++) rows[j].classList.remove("clear");
+        }
+    }
+    if(isFull){    
+        // show toast (full rows)
+        displayToast("rowsFull");
+    }
+}
+
 // TODO: Why two seperate functions?
 // if random is chosen, make the selected mino grey and vice versa
 function toggleColor(color) {
@@ -135,8 +166,21 @@ function getDropdownOptions(){
 
 // display a toast
 // if it is called because rows are full, it waits 10 seconds before it's called again 
+let toastQueue = [];
 let canCall = true;
+
 function displayToast(id) {
+  toastQueue.push(id);
+
+  if (toastQueue.length === 1) {
+    showNextToast();
+  }
+}
+
+function showNextToast() {
+  if (!toastQueue.length) return;
+
+  let id = toastQueue[0];
   if (id !== 'rowsFull' || canCall) {
     if (id === 'rowsFull') {
       canCall = false;
@@ -148,20 +192,10 @@ function displayToast(id) {
     toast.classList.add("show");
     setTimeout(function() {
       toast.classList.remove("show");
+      toastQueue.shift();
+      showNextToast();
     }, 2500);
   }
-}
-
-// counts the occupied minos in a row
-function countMinoInRow(rowNumber) {
-    var minoCount = 0;
-    var elements = document.getElementsByClassName("row-" + rowNumber);
-    for (var i = 0; i < elements.length; i++) {
-        if (elements[i].classList.contains("mino")) {
-            minoCount++;
-        }
-    }
-    return minoCount;
 }
 
 //select Ramdom Minotype
@@ -246,17 +280,19 @@ function actualImport(values, textarea){
 
         //div.classList.add("ui-selectee");
         if(values[i].toUpperCase() != emptyMino) div.classList.add("mino");
+        //else div.classList.remove("mino");
     }
 
     displayToast("successImport");
     getMinoList();
     textarea.value = "";
+    checkAllRows();
 }
 // import a CSV file (2 of 2)
 function csvToPlayfield(textarea) {
   
     // Split the csv data into an array of values
-    var data = textarea.value;
+    var data = textarea.value.trim();
     var values = data.split(',');
 
     // check if the number of values is 100 and if each value is a 2-digit hexadecimal number
@@ -264,12 +300,10 @@ function csvToPlayfield(textarea) {
         displayToast("errorImport");
         return;
     }
-    var minoDivs = document.getElementsByClassName("stack mino");
+    var minoDivs = document.getElementsByClassName("mino");
     if (minoDivs.length > 0){
         var confirm = window.confirm("Your current playfield will be overwritten. Continue?");
-        if (confirm == true){
-            actualImport(values, textarea);
-        }
+        if (confirm == true) actualImport(values, textarea);
     }else{
         actualImport(values, textarea);
     }
@@ -324,25 +358,8 @@ $( function(){
             });
 
             // update the mino list
-            getMinoList();
-            
-            // check each row and make sure it's not full
-            let nMino;
-            let isFull = false;
-            for(let i=1; i<=10; i++){
-                nMino = countMinoInRow(i); 
-                let rows = document.getElementsByClassName("row-" + i);
-                if(nMino == 10){
-                    for(let j = 0; j < rows.length; j++) rows[j].classList.add("clear");
-                    isFull = true;
-                }else{
-                    for(let j = 0; j < rows.length; j++) rows[j].classList.remove("clear");
-                }
-            }
-            if(isFull){    
-                // show toast (full rows)
-                displayToast("rowsFull");
-            }
+            getMinoList(); 
+            checkAllRows();
         }
     });  
 });
