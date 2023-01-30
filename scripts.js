@@ -8,7 +8,6 @@
 // * no need for the text area (maybe in a accordion) [kinda, but the solution is not bullet-proof]
 // * Make the things responsive - e.g. change the minosize to 16 if the screen is too small
 // * make sure if ctrl is pressed, it adds minos regardless
-// * also include capital letters
 
 /*******************************************************************************
  (1) GLOBAL VARIABLES AND INITIAL SET-UP
@@ -63,10 +62,10 @@ document.addEventListener("keydown", function(event) {
             // numbers 1-8 select the standard minos
             cell = document.getElementById((event.key.charCodeAt(0)-49+128).toString(16).padStart(2, "0"));
         }else if(event.code >= "KeyA" && event.code <= "KeyZ"){
-            // letters select letter minos 
-            cell = document.getElementById((event.key.charCodeAt(0)-"A".charCodeAt(0) -22).toString(16).padStart(2, "0"));
+            // letters
+            cell = document.getElementById((event.key.toUpperCase().charCodeAt(0) - "A".charCodeAt(0) + 10).toString(16).padStart(2, "0"));
         }else if((event.code >= "Digit0" && event.code <= "Digit9")){
-            // numpad selects numbers 
+            // numpad 
             cell = document.getElementById((event.key.charCodeAt(0)-48).toString(16).padStart(2, "0"));
         }else if(event.code == "Period" || event.code == "NumpadDecimal"){
             // the dot
