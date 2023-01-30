@@ -6,21 +6,21 @@
 
 // TODOs
 // * no need for the text area (maybe in a accordion) [kinda, but the solution is not bullet-proof]
-// * when check box is checked, no mino should be selected
 // * Make the things responsive - e.g. change the minosize to 16 if the screen is too small
 // * make sure if ctrl is pressed, it adds minos regardless
+// * also include capital letters
 
 /*******************************************************************************
  (1) GLOBAL VARIABLES AND INITIAL SET-UP
 *******************************************************************************/
 // global variable defines which mino will be added when you press in the playfield 
-var currentMino = "80";
+var currentMino = "87";
 let emptyMino = "2F";
 
 //
 document.addEventListener("DOMContentLoaded", function() {
 //window.onload = function() {
-    document.getElementById("80").click();
+    document.getElementById(currentMino).click();
     getDropdownOptions();
     addMatrix();
 });
@@ -44,12 +44,14 @@ checkbox.addEventListener("change", function() {
     if (this.checked) {
         // make vramgrid border grey
         document.getElementById("vramgrid").style.borderColor = "rgb(224, 224, 224)";
+        toggleColor("grey");
     } else {
         // make vramgrid border green
         document.getElementById("vramgrid").style.borderColor = "rgb(158, 210, 144)";
         let selectedCell = document.querySelector('.cell.selected');
         let selectedCellId = selectedCell.id;
         currentMino = selectedCellId.toUpperCase();
+        toggleColor("green");
     }
 });
 
@@ -88,6 +90,33 @@ document.addEventListener("keydown", function(event) {
 /*******************************************************************************
  (2) FUNCTIONS
 *******************************************************************************/
+
+// TODO: Why two seperate functions?
+// if random is chosen, make the selected mino grey and vice versa
+function toggleColor(color) {
+    var selectedElement = document.getElementsByClassName("selected")[0];
+    var currentBg = selectedElement.style.backgroundImage;
+    if (color === "green") {
+      selectedElement.style.removeProperty("border");
+      selectedElement.style.backgroundImage = currentBg.replace("/grey/", "/green/");
+    } else if (color === "grey") {
+      selectedElement.style.border = "2px solid grey";
+      selectedElement.style.backgroundImage = currentBg.replace("/green/", "/grey/");
+    }
+}
+
+// changes the image in the VRAM Grid
+function changeBg(id, toColor) {
+    let cell = document.getElementById(id);
+    let currentBg = cell.style.backgroundImage;
+    if (toColor == "green") {
+        let newBg = currentBg.replace("green", "grey"); //color => 'grey'
+        cell.style.backgroundImage = newBg;
+    } else if (toColor == "grey") {
+        let newBg = currentBg.replace("grey", "green"); //color => 'green'
+        cell.style.backgroundImage = newBg;
+    }
+}
 
 // displays the pre-defined playfields (in playfields.js) 
 function getDropdownOptions(){
@@ -163,19 +192,6 @@ function copyText() {
     displayToast("minoAdded");
 }
 
-// changes the image in the VRAM Grid
-function changeBg(id, toColor) {
-    let cell = document.getElementById(id);
-    let currentBg = cell.style.backgroundImage;
-    if (toColor == "green") {
-        let newBg = currentBg.replace("green", "grey"); //color => 'grey'
-        cell.style.backgroundImage = newBg;
-    } else if (toColor == "grey") {
-        let newBg = currentBg.replace("grey", "green"); //color => 'green'
-        cell.style.backgroundImage = newBg;
-    }
-}
-
 // create the playfield
 function addMatrix(){
     ol = document.getElementById("selectable");
@@ -209,7 +225,7 @@ function addMatrix(){
     getMinoList();
 }
 
-// import a CSV file
+// import a CSV file (1 of 2)
 function actualImport(values, textarea){
         
     // remove all classes except stack, ui-selectee and row-{#}
@@ -232,7 +248,7 @@ function actualImport(values, textarea){
     getMinoList();
     textarea.value = "";
 }
-
+// import a CSV file (2 of 2)
 function csvToPlayfield(textarea) {
   
     // Split the csv data into an array of values
@@ -265,7 +281,7 @@ for (let i = 0; i < 256; i++) {
         cell.classList.add("standard");
     }
     cell.id = hexId;
-    cell.style.backgroundImage = 'url("images/grey/'+hexId+'.png")';
+    cell.style.backgroundImage = 'url("images/grey/' + hexId + '.png")';
     cell.onclick = function() {
         document.querySelectorAll(".cell").forEach(function(c) {
             c.classList.remove("selected");
@@ -292,13 +308,8 @@ $( function(){
                 if(i === 0 && this.classList.contains("mino")) remove = true;
                 if(!this.classList.contains("noStack")){
                     if(remove){
-                        //if(event.ctrlKey){
-                        //    this.classList.add(mino);
-                        //    $(el).find('img').attr('src', 'images/green/' + currentMino + '.png');    
-                        //}else{
-                            this.classList.remove(mino);    
-                            $(el).find('img').attr('src', 'images/green/' + emptyMino + '.png');
-                        //}
+                        this.classList.remove(mino);    
+                        $(el).find('img').attr('src', 'images/green/' + emptyMino + '.png');
                     }else{
                         // make sure 2F is not treated as a mino
                         if(currentMino.toUpperCase() == emptyMino) this.classList.remove(mino);

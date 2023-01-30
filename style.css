@@ -79,7 +79,8 @@ body{
 
 /* the selected mino */
 .selected {
-    border: 2px solid rgb(255, 245, 47);
+  border: 2px solid rgb(255, 157, 0);
+  box-sizing: border-box;
 }
 
 /* hovering a mino */
