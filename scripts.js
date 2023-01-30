@@ -83,6 +83,11 @@ document.addEventListener("keydown", function(event) {
             cell.classList.add("selected");
             changeBg(cell.id, "grey");
             currentMino = cell.id;
+
+            //uncheck the random checkbox
+            if (document.getElementById("allowConfig").checked) {
+                document.getElementById("allowConfig").click();
+              }
         }
 });
 
@@ -143,7 +148,7 @@ function displayToast(id) {
     toast.classList.add("show");
     setTimeout(function() {
       toast.classList.remove("show");
-    }, 3000);
+    }, 2500);
   }
 }
 

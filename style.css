@@ -138,7 +138,7 @@ body{
   position: fixed;
   z-index: 1;
   left: 50%;
-  bottom: 30px;
+  top: 30px;
   font-size: 17px;
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
   transform: translate(-50%, 0);
@@ -154,28 +154,28 @@ body{
 
 .toast.show {
   visibility: visible;
-  -webkit-animation: fadein 0.5s, fadeout 0.5s 2.5s;
-  animation: fadein 0.5s, fadeout 0.5s 2.5s;
+  -webkit-animation: fadein 0.5s, fadeout 0.5s 3.0s;
+  animation: fadein 0.5s, fadeout 0.5s 3.0s;
 }
   
 @-webkit-keyframes fadein {
-  from {bottom: 0; opacity: 0;} 
-  to {bottom: 30px; opacity: 1;}
+  from {top: 60px; opacity: 0;} 
+  to {top: 30px; opacity: 1;}
 }
   
 @keyframes fadein {
-  from {bottom: 0; opacity: 0;}
-  to {bottom: 30px; opacity: 1;}
+  from {top: 60px; opacity: 0;}
+  to {top: 30px; opacity: 1;}
 }
   
 @-webkit-keyframes fadeout {
-  from {bottom: 30px; opacity: 1;} 
-  to {bottom: 0; opacity: 0;}
+  from {top: 60px; opacity: 1;} 
+  to {top: 30px; opacity: 0;}
 }
   
 @keyframes fadeout {
-  from {bottom: 30px; opacity: 1;}
-  to {bottom: 0; opacity: 0;}
+  from {top: 60px; opacity: 1;}
+  to {top: 30px; opacity: 0;}
 }
 
 /************************************************************
