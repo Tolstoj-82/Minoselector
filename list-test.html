@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <style>
+        #piecesGrid {
+            width: 6em;
+            border-collapse: collapse;
+            border: 1px solid black;
+            height: 100%;
+        }
+    
+        #piecesGrid td {
+            border: 0px solid black;
+            padding: 8px;
+            text-align: center;
+            width: 2em;
+        }
+
+        .first-column, .third-column{
+            background-color: lightgrey;
+        }
+
+        .third-column{
+            cursor: pointer;
+        }
+
+        .third-column:hover{
+            background-color: rgb(138, 138, 138);
+            color: white;
+        }
+
+</style>
+</head>
+<body>
+    <h3>Start with these pieces</h3>
+    <div style="max-height: 500px; overflow-y: scroll; overflow-x: hidden; width: contain;">
+        <table id="piecesGrid">
+            <tbody>
+                <tr id="1">
+                    <td class="first-column">1</td>
+                    <td class="second-column">*</td>
+                    <td class="third-column"></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <p>
+        <button onclick="displayPieceSequence();" class="button">Get Pieces</button>
+    </p>
+    <p>
+        <div id="pieceOutput"></div>
+    </p>
+    <script>
+        const piecesGrid = document.querySelector("#piecesGrid");
+        let currentIndex = 1;
+        
+        //
+        function displayPieceSequence(){
+            let sequence = getPieceSequence();
+            let outputDiv = document.getElementById("pieceOutput");
+            outputDiv.innerHTML = sequence;
+        }
+
+        // create the piece sequence
+        function getPieceSequence() {
+            let table = document.querySelector("#piecesGrid");
+            let rows = table.getElementsByTagName("tr");
+            let values = [];
+            let mapping = { "L": "00", "J": "04", "I": "08", "O": "0C", "Z": "10", "S": "14", "T": "18"};
+
+            for (let i = 0; i < rows.length; i++) {
+                let secondColumn = rows[i].querySelector(".second-column").innerHTML;
+                if(secondColumn !== "*"){
+                    values.push(mapping[secondColumn] || secondColumn);
+                }
+            }
+
+            let result = values.join(",");
+            return result.endsWith(",") ? result.slice(0, -1) : result;
+        }
+
+
+        // renumber the rows of the pieces grid
+        function renumberRows() {
+            const table = document.querySelector("#piecesGrid");
+            const rows = table.getElementsByTagName("tr");
+            for (let i = 0; i < rows.length; i++) {
+                rows[i].id = (i + 1).toString();
+                rows[i].querySelector(".first-column").innerHTML = i + 1;
+                currentIndex = i + 1;
+            }
+            // the last third row can only ever be an X if current Index = 256 
+        }
+
+        piecesGrid.addEventListener("click", function(event) {
+            const target = event.target;
+            if (target.classList.contains("second-column")) {
+                if (target.textContent === "*") {
+                    target.setAttribute("contenteditable", true);
+                    target.textContent = "";
+                    target.focus();
+
+                }
+            }else if(target.classList.contains("third-column")){
+                    if (target.textContent === "X") {
+                        const parentRow = target.parentNode;
+                        const parentRowId = parentRow.id;
+                        //if(confirm("Do you want to delete row " + parentRowId + "?")){
+                            //delete a row
+                            let table = document.getElementById("piecesGrid");
+                            let rowToDelete = document.getElementById(parentRowId.toString());
+                            table.deleteRow(rowToDelete.rowIndex);
+                            renumberRows();
+                        //}
+                }
+
+            }
+        });
+  
+        piecesGrid.addEventListener("keydown", function(event) {
+            const target = event.target;
+            if (target.classList.contains("second-column")) {
+                if (
+                    event.key === "T" || event.key === "t" || 
+                    event.key === "J" || event.key === "j" ||
+                    event.key === "Z" || event.key === "z" ||
+                    event.key === "O" || event.key === "o" ||
+                    event.key === "S" || event.key === "s" ||
+                    event.key === "L" || event.key === "l" ||
+                    event.key === "I" || event.key === "i"
+                ){
+            
+                    currentIndex++;
+
+                    event.preventDefault();
+                    target.textContent = event.key.toUpperCase();
+                    target.setAttribute("contenteditable", false);
+                    const nextRow = target.parentElement.nextElementSibling;
+
+                    if (!nextRow) {
+                        const newRow = piecesGrid.insertRow();
+                        newRow.id = currentIndex.toString();
+
+                        const firstColumn = newRow.insertCell();
+                        firstColumn.textContent = currentIndex;
+                        firstColumn.classList.add("first-column");
+
+                        const secondColumn = newRow.insertCell();                        
+                        secondColumn.classList.add("second-column");
+                        secondColumn.setAttribute("contenteditable", true);
+                        secondColumn.textContent = "*";
+
+                        const thirdColumn = newRow.insertCell();
+                        //thirdColumn.textContent = "X";
+                        thirdColumn.classList.add("third-column");
+                        // give an X to the last element
+                        document.getElementById(currentIndex-1).querySelector(".third-column").innerHTML = "X";
+                        secondColumn.focus();
+                    } else {
+                        nextRow.querySelector(".second-column").setAttribute("contenteditable", true);
+                        nextRow.querySelector(".second-column").click();
+                    }
+                } else {
+                    alert("Only the letters L,J,I,Z,O,S or T are allowed!");
+                    event.preventDefault();
+                
+                }
+                if(currentIndex > 256){
+                    alert("There can only be 256 Tetrominoes!");
+                    
+                    //delete the last coumn
+                    let table = document.getElementById("piecesGrid");
+                    let rowToDelete = document.getElementById("257");
+                    table.deleteRow(rowToDelete.rowIndex);
+                }
+            }
+        });
+    </script>
+    </body>
+  </html>
+  

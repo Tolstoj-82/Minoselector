@@ -12,13 +12,13 @@
 /*******************************************************************************
  (1) GLOBAL VARIABLES AND INITIAL SET-UP
 *******************************************************************************/
-
 // global variables defines initial mino and empty mino
 var currentMino = "87";
 let emptyMino = "2F";
 
-// do this, once all DOM elements have been loaded 
+//
 document.addEventListener("DOMContentLoaded", function() {
+//window.onload = function() {
     document.getElementById(currentMino).click();
     getDropdownOptions();
     addMatrix();
@@ -55,11 +55,10 @@ checkbox.addEventListener("change", function() {
 
 // Key presses
 document.addEventListener("keydown", function(event) {
-    let isActive = document.activeElement;
-    let pieceContainer = document.getElementById("pieceContainer");
-    let isInsideTextarea = isActive.tagName === 'TEXTAREA';
-    let isInsidePieceContainer = pieceContainer.contains(isActive);
-    if (isInsideTextarea || isInsidePieceContainer) return;
+
+    // disable event listener, when you are inside a text area
+    let textarea = document.activeElement;
+    if (textarea.tagName === 'TEXTAREA') return;
     
     let cell = null;
     if(event.code >= "Numpad1" && event.code <= "Numpad8"){
@@ -287,13 +286,11 @@ function actualImport(values, textarea){
         if(values[i].toUpperCase() != emptyMino) div.classList.add("mino");
         //else div.classList.remove("mino");
     }
+
     displayToast("successImport");
     getMinoList();
     textarea.value = "";
     checkAllRows();
-    // removes the pieces to be generated
-    removePieces(); 
-
 }
 // import a CSV file (2 of 2)
 function csvToPlayfield(textarea) {
