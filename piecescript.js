@@ -1,10 +1,28 @@
 const piecesGrid = document.querySelector("#piecesGrid");
-let currentIndex = 1;
+const pieceTypes = ["L", "J", "I", "O", "Z", "S", "T"];
+var currentIndex = 1;
+const imgPath = "images/tetrominos/";
+var warningShown = false;
+
+// letter to image tag, or vice versa
+function swapLetterAndImage(value) {
+    if (value.includes("<img")) {
+      let startIndex = value.indexOf('src="') + 5 + imgPath.length;
+      let endIndex = value.indexOf('.png');
+      return value.substring(startIndex, endIndex);
+    } else if(value == "*") {
+        return "*";
+    }else{
+      return `<img src="${imgPath}${value}.png" style="width:100%; height:100%;">`;
+    }
+  }
+  
 
 //
 function displayPieceSequence(){
     let sequence = getPieceSequence();
     let outputDiv = document.getElementById("pieceOutput");
+
     outputDiv.innerHTML = sequence;
     removePieces();
 }
@@ -26,7 +44,7 @@ function getPieceSequence() {
     let mapping = { "L": "00", "J": "04", "I": "08", "O": "0C", "Z": "10", "S": "14", "T": "18"};
 
     for (let i = 0; i < rows.length; i++) {
-        let secondColumn = rows[i].querySelector(".second-column").innerHTML;
+        let secondColumn = swapLetterAndImage(rows[i].querySelector(".second-column").innerHTML);
         if(secondColumn !== "*"){
             values.push(mapping[secondColumn] || secondColumn);
         }
@@ -75,17 +93,26 @@ piecesGrid.addEventListener("click", function(event) {
 });
 
 piecesGrid.addEventListener("keydown", function(event) {
+    
+    //important to be able to use capital letters
+    if(event.key === 'Shift') return;
+    
+    // delete the last entry
+    if(event.key === 'Backspace'){
+        let table = document.getElementById("piecesGrid");
+        let lastRow = table.rows.length - 2;
+        if(lastRow > -1){
+            table.deleteRow(lastRow);
+            renumberRows();
+        }        
+        return;
+    }
     const target = event.target;
     if (target.classList.contains("second-column")) {
-        if (
-            event.key === "L" || event.key === "l" || 
-            event.key === "J" || event.key === "j" ||
-            event.key === "I" || event.key === "i" ||
-            event.key === "O" || event.key === "o" ||
-            event.key === "Z" || event.key === "z" ||
-            event.key === "S" || event.key === "s" ||
-            event.key === "T" || event.key === "t"
-        ){
+
+        // event listener for all the tetromino letters
+        const lowerCaseTypes = pieceTypes.map(type => type.toLowerCase());
+        if (lowerCaseTypes.includes(event.key.toLowerCase())) {
     
             currentIndex++;
 
@@ -111,6 +138,12 @@ piecesGrid.addEventListener("keydown", function(event) {
                 thirdColumn.classList.add("third-column");
                 secondColumn.focus();
                 // add an "X" to the previous element
+                const lastSecondRow = document.getElementById(`piece-${currentIndex - 1}`).querySelector(".second-column");
+                const content = lastSecondRow.textContent;
+                if (pieceTypes.includes(content)) {
+                  lastSecondRow.innerHTML = `<img src="${imgPath}${content}.png" style="width:100%; height:100%;">`;
+                }
+
                 lastThirdRow = document.getElementById("piece-"+(currentIndex-1).toString()).querySelector(".third-column");
                 lastThirdRow.innerHTML = "&times;";//
                 
@@ -119,7 +152,8 @@ piecesGrid.addEventListener("keydown", function(event) {
                 nextRow.querySelector(".second-column").click();
             }
         } else {
-            alert("Only the letters L,J,I,O,Z,S or T are allowed!");
+            if(!warningShown) alert("Only the letters L,J,I,O,Z,S or T are allowed!\n\nInfo: This message will not be shown again until you refresh the browser!");
+            warningShown = true;
             event.preventDefault();
         
         }

@@ -339,7 +339,7 @@ body{
  PIECE SEQUENCE
 *************************************************************/
 #pieceContainer{
-  height: 550px; 
+  height: 576px; 
   overflow-y: scroll; 
   overflow-x: hidden; 
   width: contain;

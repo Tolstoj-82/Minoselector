@@ -5,8 +5,9 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 // TODOs
+// * button (with confirmation) to delete the piece sequence
 // * changeBg and toggleColor into one function?
-// * Make the things responsive - e.g. change the minosize to 16 if the screen is too small
+// * Make it responsive - e.g. change the minosize to 16 if the screen is too small
 // * make sure if ctrl is pressed, it adds minos regardless
 
 /*******************************************************************************
@@ -42,19 +43,20 @@ checkbox.addEventListener("change", function() {
     if (this.checked) {
         // make vramgrid border grey
         document.getElementById("vramgrid").style.borderColor = "rgb(224, 224, 224)";
-        toggleColor("grey");
+        toggleColor(null, "grey");
     } else {
         // make vramgrid border green
         document.getElementById("vramgrid").style.borderColor = "rgb(158, 210, 144)";
         let selectedCell = document.querySelector('.cell.selected');
         let selectedCellId = selectedCell.id;
         currentMino = selectedCellId.toUpperCase();
-        toggleColor("green");
+        toggleColor(null, "green");
     }
 });
 
-// Key presses
+// Track Key presses
 document.addEventListener("keydown", function(event) {
+    // Disable tracking when the focus is in a textarea or the piece selection
     let isActive = document.activeElement;
     let pieceContainer = document.getElementById("pieceContainer");
     let isInsideTextarea = isActive.tagName === 'TEXTAREA';
@@ -81,11 +83,11 @@ document.addEventListener("keydown", function(event) {
     
     if(cell != null){
         document.querySelectorAll(".cell").forEach(function(c) {
-            c.classList.remove("selected");
-            changeBg(c.id, "green");
+            c.classList.remove("selected");          
+            toggleColor(c.id, "grey");
         });
         cell.classList.add("selected");
-        changeBg(cell.id, "grey");
+        toggleColor(cell.id, "green");
         currentMino = cell.id;
 
         //uncheck the random checkbox
@@ -131,30 +133,16 @@ function checkAllRows(){
     }
 }
 
-// TODO: Why two seperate functions?
 // if random is chosen, make the selected mino grey and vice versa
-function toggleColor(color) {
-    var selectedElement = document.getElementsByClassName("selected")[0];
-    var currentBg = selectedElement.style.backgroundImage;
-    if (color === "green") {
-      selectedElement.style.removeProperty("border");
-      selectedElement.style.backgroundImage = currentBg.replace("/grey/", "/green/");
-    } else if (color === "grey") {
-      selectedElement.style.border = "2px solid grey";
-      selectedElement.style.backgroundImage = currentBg.replace("/green/", "/grey/");
-    }
-}
-
-// changes the image in the VRAM Grid
-function changeBg(id, toColor) {
-    let cell = document.getElementById(id);
-    let currentBg = cell.style.backgroundImage;
-    if (toColor == "green") {
-        let newBg = currentBg.replace("green", "grey"); //color => 'grey'
-        cell.style.backgroundImage = newBg;
-    } else if (toColor == "grey") {
-        let newBg = currentBg.replace("grey", "green"); //color => 'green'
-        cell.style.backgroundImage = newBg;
+function toggleColor(id, color) {
+    let element = id ? document.getElementById(id) : document.getElementsByClassName("selected")[0];
+    let currentBg = element.style.backgroundImage;
+    let newBg = (color === "green") ? currentBg.replace("/grey/", "/green/") : currentBg.replace("/green/", "/grey/");
+    element.style.backgroundImage = newBg;
+    if (!id && color === "grey") {
+        element.style.border = "2px solid grey";
+    } else {
+        element.style.removeProperty("border");
     }
 }
 
@@ -170,7 +158,8 @@ function getDropdownOptions(){
 }
 
 // display a toast
-// if it is called because rows are full, it waits 10 seconds before it's called again 
+// if it is called because rows are full, it waits 10 seconds before it's called again
+// waits for the last toast to disappear, before the next is shown
 let toastQueue = [];
 let canCall = true;
 
@@ -308,12 +297,14 @@ function csvToPlayfield(textarea) {
         return;
     }
     var minoDivs = document.getElementsByClassName("mino");
-    if (minoDivs.length > 0){
-        var confirm = window.confirm("Your current playfield will be overwritten. Continue?");
+    var gridRows = document.querySelectorAll("#piecesGrid tr");
+    if (minoDivs.length > 0 || gridRows.length > 1){
+        var confirm = window.confirm("Your current playfield and piece sequence will be overwritten. Continue?");
         if (confirm == true) actualImport(values, textarea);
     }else{
         actualImport(values, textarea);
     }
+    
 }
 
 // Should that be inside a function?
@@ -330,10 +321,10 @@ for (let i = 0; i < 256; i++) {
     cell.onclick = function() {
         document.querySelectorAll(".cell").forEach(function(c) {
             c.classList.remove("selected");
-            changeBg(c.id, "green");
+            toggleColor(c.id, "grey");
         });
         this.classList.add("selected");
-        changeBg(this.id, "grey");
+        toggleColor(this.id, "green");
         currentMino = this.id;
         document.getElementById("allowConfig").checked = false;
         document.getElementById("vramgrid").style.borderColor = "rgb(158, 210, 144)";
