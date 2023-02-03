@@ -1,8 +1,43 @@
 const piecesGrid = document.querySelector("#piecesGrid");
 const pieceTypes = ["L", "J", "I", "O", "Z", "S", "T"];
+
+// mapping for the pieces and orientations 
+const orientations = ["", "E", "S", "W"];
+let mapping = {};
+for (let i = 0; i < pieceTypes.length; i++) {
+    for (let j = 0; j < orientations.length; j++) {
+      let type = pieceTypes[i];
+      let orientation = orientations[j];
+      let decimalValue = (i * orientations.length) + j;
+      let hexValue = decimalValue.toString(16).padStart(2, '0').toUpperCase();
+      mapping[`${type}${orientation}`] = `${hexValue}`;
+    }
+  }
+
 var currentIndex = 1;
 const imgPath = "images/tetrominos/";
 var warningShown = false;
+
+// rotate the piece by 90° CW
+function rotate(id) {
+    let image = document.getElementById(id);
+    let imageName = image.src.split("/").pop().split(".")[0];
+    
+    let newImageName = "";
+    if (imageName.length === 1) {
+        newImageName = imageName + "E";
+    } else {
+        let lastLetter = imageName[imageName.length - 1];
+        let index = orientations.indexOf(lastLetter);
+        if (index === orientations.length - 1) {
+            newImageName = imageName.slice(0, -1);
+        } else {
+            newImageName = imageName.slice(0, -1) + orientations[index + 1];
+        }
+    }
+    
+    image.src = imgPath + newImageName + ".png";
+}
 
 // letter to image tag, or vice versa
 function swapLetterAndImage(value) {
@@ -13,12 +48,11 @@ function swapLetterAndImage(value) {
     } else if(value == "*") {
         return "*";
     }else{
-      return `<img src="${imgPath}${value}.png" style="width:100%; height:100%;">`;
+      return `<img src="${imgPath}${value}.png" style="width:100%; height:100%;">`; ////////////////////////////
     }
   }
   
-
-//
+// displays the piece sequence in a div --> replace ASAP
 function displayPieceSequence(){
     let sequence = getPieceSequence();
     let outputDiv = document.getElementById("pieceOutput");
@@ -41,7 +75,6 @@ function getPieceSequence() {
     let table = document.querySelector("#piecesGrid");
     let rows = table.getElementsByTagName("tr");
     let values = [];
-    let mapping = { "L": "00", "J": "04", "I": "08", "O": "0C", "Z": "10", "S": "14", "T": "18"};
 
     for (let i = 0; i < rows.length; i++) {
         let secondColumn = swapLetterAndImage(rows[i].querySelector(".second-column").innerHTML);
@@ -63,10 +96,14 @@ function renumberRows() {
         rows[i].id = "piece-" + (i + 1).toString();
         rows[i].querySelector(".first-column").innerHTML = i + 1;
         currentIndex = i + 1;
+
+        // also renumber the image-ID
+        rows[i].querySelector("img").id = "img-" + (i + 1).toString();
+        rows[i].querySelector("img").setAttribute("onclick", "rotate('img-" + (i + 1).toString()+"')");
     }
-    // the last third row can only ever be an X if current Index = 256 
 }
 
+// when you click into the pieces grid...
 piecesGrid.addEventListener("click", function(event) {
     const target = event.target;
     if (target.classList.contains("second-column")) {
@@ -76,17 +113,16 @@ piecesGrid.addEventListener("click", function(event) {
             target.focus();
         }
     }else if(target.classList.contains("third-column")){
-           //alert(target.innerHTML);
+
             if (target.innerHTML != "") {
                 const parentRow = target.parentNode;
                 const parentRowId = parentRow.id;
-                //if(confirm("Do you want to delete row " + parentRowId + "?")){
-                    //delete a row
-                    let table = document.getElementById("piecesGrid");
-                    let rowToDelete = document.getElementById(parentRowId.toString());
-                    table.deleteRow(rowToDelete.rowIndex);
-                    renumberRows();
-                //}
+                //delete a row
+                //if(confirm("Do you want to delete row " + parentRowId + "?")){...}
+                let table = document.getElementById("piecesGrid");
+                let rowToDelete = document.getElementById(parentRowId.toString());
+                table.deleteRow(rowToDelete.rowIndex);
+                renumberRows();
         }
 
     }
@@ -122,6 +158,7 @@ piecesGrid.addEventListener("keydown", function(event) {
             const nextRow = target.parentElement.nextElementSibling;
 
             if (!nextRow) {
+                // make this its own function
                 const newRow = piecesGrid.insertRow();
                 newRow.id = "piece-" + currentIndex.toString();
 
@@ -137,15 +174,16 @@ piecesGrid.addEventListener("keydown", function(event) {
                 const thirdColumn = newRow.insertCell();
                 thirdColumn.classList.add("third-column");
                 secondColumn.focus();
-                // add an "X" to the previous element
+                
+                // add an "X" (&ntimes;) to the previous element
                 const lastSecondRow = document.getElementById(`piece-${currentIndex - 1}`).querySelector(".second-column");
                 const content = lastSecondRow.textContent;
                 if (pieceTypes.includes(content)) {
-                  lastSecondRow.innerHTML = `<img src="${imgPath}${content}.png" style="width:100%; height:100%;">`;
+                  lastSecondRow.innerHTML = `<img src="${imgPath}${content}.png" class="tetromino" id="img-${currentIndex - 1}" onclick="rotate('img-${currentIndex - 1}')">`;
                 }
 
                 lastThirdRow = document.getElementById("piece-"+(currentIndex-1).toString()).querySelector(".third-column");
-                lastThirdRow.innerHTML = "&times;";//
+                lastThirdRow.innerHTML = "&times;";
                 
             } else {
                 nextRow.querySelector(".second-column").setAttribute("contenteditable", true);

@@ -5,8 +5,8 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 // TODOs
+// * load and copy including the piece sequence
 // * button (with confirmation) to delete the piece sequence
-// * changeBg and toggleColor into one function?
 // * Make it responsive - e.g. change the minosize to 16 if the screen is too small
 // * make sure if ctrl is pressed, it adds minos regardless
 
