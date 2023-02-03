@@ -1,5 +1,8 @@
 const piecesGrid = document.querySelector("#piecesGrid");
 const pieceTypes = ["L", "J", "I", "O", "Z", "S", "T"];
+var currentIndex = 1;
+const imgPath = "images/tetrominos/";
+var warningShown = false;
 
 // mapping for the pieces and orientations 
 const orientations = ["", "E", "S", "W"];
@@ -14,9 +17,38 @@ for (let i = 0; i < pieceTypes.length; i++) {
     }
   }
 
-var currentIndex = 1;
-const imgPath = "images/tetrominos/";
-var warningShown = false;
+// load in the piece sequence from the textarea
+function loadInPieceSequence(pieces){
+    splitPieces = pieces.trim().split(",");
+    const decodedPieces = [];
+    for (let i = 0; i < splitPieces.length; i++) {
+      const value = splitPieces[i];
+      let decimalValue = parseInt(value, 16);
+      let pieceIndex = Math.floor(decimalValue / orientations.length);
+      let orientationIndex = decimalValue % orientations.length;
+      let pieceType = pieceTypes[pieceIndex];
+      let orientation = orientations[orientationIndex];
+      decodedPieces.push(pieceType + orientation);
+    }
+    //alert(decodedPieces);
+    //const piecesGrid = document.getElementById("piecesGrid");
+    const table = document.getElementById("piecesGrid");
+    while (table.rows.length > 0) {
+        table.deleteRow(0);
+    }
+    currentIndex = 0;
+
+    for (let i = 0; i < decodedPieces.length; i++) {
+        addRowToTable(i+1, true, decodedPieces[i]);
+    }
+
+    // make sure the system knows where it is
+    currentIndex = decodedPieces.length+1;
+    addRowToTable(currentIndex, true, "");
+///////////////  WHAT IS GOING ON HERE?
+    getMinoList();
+    renumberRows();
+}
 
 // rotate the piece by 90° CW
 function rotate(id) {
@@ -37,6 +69,7 @@ function rotate(id) {
     }
     
     image.src = imgPath + newImageName + ".png";
+    getMinoList();
 }
 
 // letter to image tag, or vice versa
@@ -48,17 +81,19 @@ function swapLetterAndImage(value) {
     } else if(value == "*") {
         return "*";
     }else{
-      return `<img src="${imgPath}${value}.png" style="width:100%; height:100%;">`; ////////////////////////////
+        // WHERE IS THAT EVEN USED? --> AT THE BEGINNING, WHICH IS WRONG ANYWAY
+        return `<img src="${imgPath}${value}.png" style="width:100%; height:100%;">`; ////////////////////////////
     }
   }
   
-// displays the piece sequence in a div --> replace ASAP
-function displayPieceSequence(){
-    let sequence = getPieceSequence();
-    let outputDiv = document.getElementById("pieceOutput");
-
-    outputDiv.innerHTML = sequence;
-    removePieces();
+// button press to clear the sequence
+function clearPieceSequence(){
+    var table = document.getElementById("piecesGrid");
+    if (table.rows.length > 1) {
+        if (confirm("This will clear the piece sequence above. Continue?")) {
+            removePieces();
+        }
+    }
 }
 
 // not the most elegant way to do this, but ok :)
@@ -83,10 +118,48 @@ function getPieceSequence() {
         }
     }
 
-    let result = values.join(", ");
-    return result.endsWith(", ") ? result.slice(0, -2) : result;
+    let result = values.join(",");
+    return result.endsWith(",") ? result.slice(0, -1) : result;
 }
 
+// adds a row to the pieces table
+function addRowToTable(currentIndex, isAutomatic, imgData) {
+    const newRow = piecesGrid.insertRow();
+    newRow.id = `piece-${currentIndex}`;
+  
+    const firstColumn = newRow.insertCell();
+    firstColumn.textContent = currentIndex;
+    firstColumn.classList.add("first-column");
+  
+    const secondColumn = newRow.insertCell();
+    secondColumn.classList.add("second-column");
+      
+    if (isAutomatic && imgData != "") {
+      secondColumn.innerHTML = `<img src="${imgPath}${imgData}.png" class="tetromino" id="img-${currentIndex}" onclick="rotate('img-${currentIndex}')">`;
+      secondColumn.setAttribute("contenteditable", false);
+    } else {
+      secondColumn.textContent = "*";
+      secondColumn.setAttribute("contenteditable", true);
+    }
+  
+    const thirdColumn = newRow.insertCell();
+    thirdColumn.classList.add("third-column");
+    secondColumn.focus();
+  
+
+    if (!isAutomatic) { //&& pieceTypes.includes(content)
+        const lastSecondRow = document.getElementById(`piece-${currentIndex - 1}`).querySelector(".second-column");
+        const content = lastSecondRow.textContent;    
+        lastSecondRow.innerHTML = `<img src="${imgPath}${imgData}${content}.png" class="tetromino" id="img-${currentIndex - 1}" onclick="rotate('img-${currentIndex - 1}')">`;
+    }
+  
+    if (!isAutomatic) {
+      const lastThirdRow = document.getElementById(`piece-${currentIndex - 1}`).querySelector(".third-column");
+      lastThirdRow.innerHTML = "&times;";
+    }else if(isAutomatic && imgData != ""){
+        thirdColumn.innerHTML = "&times;";  
+    }
+  }
 
 // renumber the rows of the pieces grid
 function renumberRows() {
@@ -97,10 +170,17 @@ function renumberRows() {
         rows[i].querySelector(".first-column").innerHTML = i + 1;
         currentIndex = i + 1;
 
-        // also renumber the image-ID
-        rows[i].querySelector("img").id = "img-" + (i + 1).toString();
-        rows[i].querySelector("img").setAttribute("onclick", "rotate('img-" + (i + 1).toString()+"')");
+        // also renumber the image-ID if there is an image
+        for (let i = 0; i < rows.length; i++) {
+            let img = rows[i].querySelector("img");
+            if (img) {
+              let id = `img-${i + 1}`;
+              img.id = id;
+              img.setAttribute("onclick", `rotate('${id}')`);
+            }
+          }
     }
+    getMinoList();
 }
 
 // when you click into the pieces grid...
@@ -114,18 +194,19 @@ piecesGrid.addEventListener("click", function(event) {
         }
     }else if(target.classList.contains("third-column")){
 
-            if (target.innerHTML != "") {
-                const parentRow = target.parentNode;
-                const parentRowId = parentRow.id;
-                //delete a row
-                //if(confirm("Do you want to delete row " + parentRowId + "?")){...}
-                let table = document.getElementById("piecesGrid");
-                let rowToDelete = document.getElementById(parentRowId.toString());
-                table.deleteRow(rowToDelete.rowIndex);
-                renumberRows();
+        if (target.innerHTML != "") {
+            const parentRow = target.parentNode;
+            const parentRowId = parentRow.id;
+            //delete a row
+            //if(confirm("Do you want to delete row " + parentRowId + "?")){...}
+            let table = document.getElementById("piecesGrid");
+            let rowToDelete = document.getElementById(parentRowId.toString());
+            table.deleteRow(rowToDelete.rowIndex);
+            renumberRows();
         }
 
     }
+    getMinoList();
 });
 
 piecesGrid.addEventListener("keydown", function(event) {
@@ -140,6 +221,7 @@ piecesGrid.addEventListener("keydown", function(event) {
         if(lastRow > -1){
             table.deleteRow(lastRow);
             renumberRows();
+            getMinoList();
         }        
         return;
     }
@@ -159,31 +241,8 @@ piecesGrid.addEventListener("keydown", function(event) {
 
             if (!nextRow) {
                 // make this its own function
-                const newRow = piecesGrid.insertRow();
-                newRow.id = "piece-" + currentIndex.toString();
-
-                const firstColumn = newRow.insertCell();
-                firstColumn.textContent = currentIndex;
-                firstColumn.classList.add("first-column");
-
-                const secondColumn = newRow.insertCell();                        
-                secondColumn.classList.add("second-column");
-                secondColumn.setAttribute("contenteditable", true);
-                secondColumn.textContent = "*";
-
-                const thirdColumn = newRow.insertCell();
-                thirdColumn.classList.add("third-column");
-                secondColumn.focus();
-                
-                // add an "X" (&ntimes;) to the previous element
-                const lastSecondRow = document.getElementById(`piece-${currentIndex - 1}`).querySelector(".second-column");
-                const content = lastSecondRow.textContent;
-                if (pieceTypes.includes(content)) {
-                  lastSecondRow.innerHTML = `<img src="${imgPath}${content}.png" class="tetromino" id="img-${currentIndex - 1}" onclick="rotate('img-${currentIndex - 1}')">`;
-                }
-
-                lastThirdRow = document.getElementById("piece-"+(currentIndex-1).toString()).querySelector(".third-column");
-                lastThirdRow.innerHTML = "&times;";
+                addRowToTable(currentIndex, false, "");
+                getMinoList();
                 
             } else {
                 nextRow.querySelector(".second-column").setAttribute("contenteditable", true);

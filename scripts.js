@@ -5,8 +5,8 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 // TODOs
-// * load and copy including the piece sequence
-// * button (with confirmation) to delete the piece sequence
+// * getMinoList is called too often!
+// * the piece import as a bit a mess, e.g. it won't load a second time, why?
 // * Make it responsive - e.g. change the minosize to 16 if the screen is too small
 // * make sure if ctrl is pressed, it adds minos regardless
 
@@ -41,10 +41,12 @@ const checkbox = document.getElementById("allowConfig");
 const vramgrid = document.getElementById("vramgrid");
 checkbox.addEventListener("change", function() {
     if (this.checked) {
+        
         // make vramgrid border grey
         document.getElementById("vramgrid").style.borderColor = "rgb(224, 224, 224)";
         toggleColor(null, "grey");
     } else {
+        
         // make vramgrid border green
         document.getElementById("vramgrid").style.borderColor = "rgb(158, 210, 144)";
         let selectedCell = document.querySelector('.cell.selected');
@@ -56,6 +58,7 @@ checkbox.addEventListener("change", function() {
 
 // Track Key presses
 document.addEventListener("keydown", function(event) {
+    
     // Disable tracking when the focus is in a textarea or the piece selection
     let isActive = document.activeElement;
     let pieceContainer = document.getElementById("pieceContainer");
@@ -150,8 +153,10 @@ function toggleColor(id, color) {
 function getDropdownOptions(){
     for (var i = 0; i < playfields.length; i++) {
         var item = playfields[i];
-        var display = item.split("|")[0];
-        var value = item.split("|")[1];
+        var splitArray = item.split("|");
+        var display = splitArray[0];
+        var value = splitArray[1];
+        if (splitArray.length > 2) value += " | " + splitArray[2];              
         var option = "<option value='" + value + "'>" + display + "</option>";
         document.getElementById("dropdown").innerHTML += option;
     }
@@ -200,6 +205,7 @@ function getRandomMino(){
 // add the mino list to the textarea
 function getMinoList() {
     let imageNames = "";
+    let sequence = "";
     let stackCells = document.querySelectorAll(".stack");
     stackCells.forEach(function(cell) {
         let cellImage = cell.querySelector("img").src;
@@ -208,8 +214,17 @@ function getMinoList() {
         let imageName = cellImage.substring(startIndex, endIndex).toUpperCase();
         imageNames += imageName + ",";
     });
+    
+    // truncate the last comma
+    imageNames = imageNames.slice(0, -1);
+
+    // also add the piece sequence
+    sequence = getPieceSequence();
+    if(sequence != "") imageNames += " | " + sequence;
+    
+    // this is a bit stupid... but let's leave it for now
     let minoList = document.querySelector("#minoList");
-    minoList.value = imageNames.slice(0, -1);
+    minoList.value = imageNames;
 }
 
 // copy the textarea to the clipboard
@@ -218,6 +233,8 @@ function copyText() {
     textarea.style.display = "block";
     textarea.select();
     document.execCommand("copy");
+    
+    // this can be commented out for debugging 
     textarea.style.display = "none";
 
     // show the toast (minos copied)
@@ -258,7 +275,7 @@ function addMatrix(){
 }
 
 // import a CSV file (1 of 2)
-function actualImport(values, textarea){
+function actualImport(values, pieces, textarea){
         
     // remove all classes except stack, ui-selectee and row-{#}
     $('.stack').removeClass(function(index, className) {
@@ -281,28 +298,37 @@ function actualImport(values, textarea){
     textarea.value = "";
     checkAllRows();
     // removes the pieces to be generated
-    removePieces(); 
+    removePieces();
+    loadInPieceSequence(pieces);
 
 }
 // import a CSV file (2 of 2)
 function csvToPlayfield(textarea) {
   
     // Split the csv data into an array of values
+    var pieces = "";
     var data = textarea.value.trim();
-    var values = data.split(',');
+    var splitValues = data.split('|');
+    if (splitValues.length === 2) {
+      var values = splitValues[0].trim().split(',');
+      pieces = splitValues[1].trim();
+    }else values = data.trim().split(',');
 
     // check if the number of values is 100 and if each value is a 2-digit hexadecimal number
     if (values.length !== 100 || !values.every(val => /^[0-9A-F]{2}$/i.test(val.trim())) ) {
         displayToast("errorImport");
         return;
     }
+
+    // also check if the piece sequence makes sense
+
     var minoDivs = document.getElementsByClassName("mino");
     var gridRows = document.querySelectorAll("#piecesGrid tr");
     if (minoDivs.length > 0 || gridRows.length > 1){
         var confirm = window.confirm("Your current playfield and piece sequence will be overwritten. Continue?");
         if (confirm == true) actualImport(values, textarea);
     }else{
-        actualImport(values, textarea);
+        actualImport(values, pieces, textarea);
     }
     
 }
@@ -347,6 +373,7 @@ $( function(){
                         this.classList.remove(mino);    
                         $(el).find('img').attr('src', 'images/green/' + emptyMino + '.png');
                     }else{
+                        
                         // make sure 2F is not treated as a mino
                         if(currentMino.toUpperCase() == emptyMino) this.classList.remove(mino);
                         else this.classList.add(mino);
