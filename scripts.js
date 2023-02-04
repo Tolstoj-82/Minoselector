@@ -1,10 +1,11 @@
 ///////////////////////////////////////////////////////////////////////////////
 //
-// TOLSTOJ 2023 (with some help of Chat GPT)
+// TOLSTOJ 2023 (with the help of ChatGPT)
 //
 ///////////////////////////////////////////////////////////////////////////////
 
 // TODOs
+// * allow to chose the garbage well
 // * getMinoList is called too often!
 // * Make it responsive - e.g. change the minosize to 16 if the screen is too small
 // * make sure if ctrl is pressed, it adds minos regardless

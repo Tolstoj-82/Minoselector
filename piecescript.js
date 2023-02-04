@@ -45,7 +45,6 @@ function loadInPieceSequence(pieces){
     // make sure the system knows where it is
     currentIndex = decodedPieces.length+1;
     addRowToTable(currentIndex, true, "");
-///////////////  WHAT IS GOING ON HERE?
     renumberRows();
 }
 
@@ -55,15 +54,21 @@ function rotate(id) {
     let imageName = image.src.split("/").pop().split(".")[0];
     
     let newImageName = "";
-    if (imageName.length === 1) {
-        newImageName = imageName + "E";
+    if (imageName.startsWith("I") || imageName.startsWith("S") || imageName.startsWith("Z")) {
+        newImageName = (imageName.length === 1) ? imageName + "E" : imageName.slice(0, -1);
+    } else if (imageName.startsWith("O")) {
+        return;
     } else {
-        let lastLetter = imageName[imageName.length - 1];
-        let index = orientations.indexOf(lastLetter);
-        if (index === orientations.length - 1) {
-            newImageName = imageName.slice(0, -1);
+        if (imageName.length === 1) {
+            newImageName = imageName + "E";
         } else {
-            newImageName = imageName.slice(0, -1) + orientations[index + 1];
+            let lastLetter = imageName[imageName.length - 1];
+            let index = orientations.indexOf(lastLetter);
+            if (index === orientations.length - 1) {
+                newImageName = imageName.slice(0, -1);
+            } else {
+                newImageName = imageName.slice(0, -1) + orientations[index + 1];
+            }
         }
     }
     
