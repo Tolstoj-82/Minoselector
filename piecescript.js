@@ -46,7 +46,6 @@ function loadInPieceSequence(pieces){
     currentIndex = decodedPieces.length+1;
     addRowToTable(currentIndex, true, "");
 ///////////////  WHAT IS GOING ON HERE?
-    getMinoList();
     renumberRows();
 }
 

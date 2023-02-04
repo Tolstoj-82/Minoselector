@@ -6,7 +6,6 @@
 
 // TODOs
 // * getMinoList is called too often!
-// * the piece import as a bit a mess, e.g. it won't load a second time, why?
 // * Make it responsive - e.g. change the minosize to 16 if the screen is too small
 // * make sure if ctrl is pressed, it adds minos regardless
 
@@ -224,6 +223,7 @@ function getMinoList() {
     
     // this is a bit stupid... but let's leave it for now
     let minoList = document.querySelector("#minoList");
+
     minoList.value = imageNames;
 }
 
@@ -299,7 +299,7 @@ function actualImport(values, pieces, textarea){
     checkAllRows();
     // removes the pieces to be generated
     removePieces();
-    loadInPieceSequence(pieces);
+    if(pieces != "") loadInPieceSequence(pieces);
 
 }
 // import a CSV file (2 of 2)
@@ -321,12 +321,13 @@ function csvToPlayfield(textarea) {
     }
 
     // also check if the piece sequence makes sense
-
     var minoDivs = document.getElementsByClassName("mino");
     var gridRows = document.querySelectorAll("#piecesGrid tr");
     if (minoDivs.length > 0 || gridRows.length > 1){
         var confirm = window.confirm("Your current playfield and piece sequence will be overwritten. Continue?");
-        if (confirm == true) actualImport(values, textarea);
+        if (confirm == true){
+            actualImport(values, pieces, textarea);
+        }
     }else{
         actualImport(values, pieces, textarea);
     }
