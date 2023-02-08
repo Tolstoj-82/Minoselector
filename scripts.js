@@ -5,7 +5,7 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 // TODOs
-// * allow to chose the garbage well
+// * {"garbage":"0123456789ABCDEF","pieces":"0123456789ABCDEF","well":"04"}
 // * getMinoList is called too often!
 // * Make it responsive - e.g. change the minosize to 16 if the screen is too small
 // * make sure if ctrl is pressed, it adds minos regardless
@@ -28,6 +28,11 @@ document.addEventListener("DOMContentLoaded", function() {
 /*******************************************************************************
  (2) EVENT LISTENERS
 *******************************************************************************/
+
+// when a garbage well is selected
+document.querySelector("#garbage-well").addEventListener("change", function() {
+  getMinoList();
+});
 
 // selected playfield to textarea
 document.getElementById("dropdown").addEventListener("change", function() {
@@ -59,7 +64,7 @@ checkbox.addEventListener("change", function() {
 // Track Key presses
 document.addEventListener("keydown", function(event) {
     
-    // Disable tracking when the focus is in a textarea or the piece selection
+    // Disable key press listener when the focus is in a textarea or the piece selection
     let isActive = document.activeElement;
     let pieceContainer = document.getElementById("pieceContainer");
     let isInsideTextarea = isActive.tagName === 'TEXTAREA';
@@ -204,6 +209,7 @@ function getRandomMino(){
 
 // add the mino list to the textarea
 function getMinoList() {
+    
     let imageNames = "";
     let sequence = "";
     let stackCells = document.querySelectorAll(".stack");
@@ -224,6 +230,13 @@ function getMinoList() {
     
     // this is a bit stupid... but let's leave it for now
     let minoList = document.querySelector("#minoList");
+
+    // if there is a garbage well selected, save it
+    var select = document.querySelector("#garbage-well");
+    var selectedOption = select.options[select.selectedIndex].value;
+    if (selectedOption !== ""){
+        imageNames += "(" + selectedOption + ")";
+    }
 
     minoList.value = imageNames;
 }
@@ -276,7 +289,10 @@ function addMatrix(){
 }
 
 // import a CSV file (1 of 2)
-function actualImport(values, pieces, textarea){
+function actualImport(values, pieces, textarea, garbageWell){
+
+    // set the garbage well selector to ""
+    document.querySelector("#garbage-well").selectedIndex = 0;
         
     // remove all classes except stack, ui-selectee and row-{#}
     $('.stack').removeClass(function(index, className) {
@@ -302,37 +318,60 @@ function actualImport(values, pieces, textarea){
     removePieces();
     if(pieces != "") loadInPieceSequence(pieces);
 
+    // if there was a garbage well, select it
+    var select = document.querySelector("#garbage-well");
+
+    for (var i = 0; i < select.options.length; i++) {
+        if (select.options[i].value === garbageWell) {
+            select.selectedIndex = i;
+            break;
+        }
+    } 
+
 }
+
 // import a CSV file (2 of 2)
 function csvToPlayfield(textarea) {
-  
+
     // Split the csv data into an array of values
     var pieces = "";
     var data = textarea.value.trim();
-    var splitValues = data.split('|');
-    if (splitValues.length === 2) {
-      var values = splitValues[0].trim().split(',');
-      pieces = splitValues[1].trim();
-    }else values = data.trim().split(',');
 
-    // check if the number of values is 100 and if each value is a 2-digit hexadecimal number
-    if (values.length !== 100 || !values.every(val => /^[0-9A-F]{2}$/i.test(val.trim())) ) {
-        displayToast("errorImport");
-        return;
+    // Check if data contains a garbage well and remove it
+    var garbageWell = "";
+    var garbageMatch = data.match(/\(([0-9]+)\)/);
+    if (garbageMatch) {
+    garbageWell = garbageMatch[1];
+    data = data.replace(garbageMatch[0], "");
+    }
+
+    var splitValues = data.split('|');
+
+    if (splitValues.length === 2) {
+    var values = splitValues[0].trim().split(',');
+    pieces = splitValues[1].trim();
+    } else {
+    values = data.trim().split(',');
+    }
+
+    // Check if the number of values is 100 and if each value is a 2-digit hexadecimal number
+    if (values.length !== 100 || !values.every(val => /^[0-9A-F]{2}$/i.test(val.trim()))) {
+    displayToast("errorImport");
+    return;
     }
 
     // also check if the piece sequence makes sense
     var minoDivs = document.getElementsByClassName("mino");
     var gridRows = document.querySelectorAll("#piecesGrid tr");
     if (minoDivs.length > 0 || gridRows.length > 1){
-        var confirm = window.confirm("Your current playfield and piece sequence will be overwritten. Continue?");
-        if (confirm == true){
-            actualImport(values, pieces, textarea);
-        }
-    }else{
-        actualImport(values, pieces, textarea);
+    var confirm = window.confirm("Your current playfield and piece sequence will be overwritten. Continue?");
+    if (confirm == true){
+        actualImport(values, pieces, textarea, garbageWell);
     }
-    
+    }else{
+        actualImport(values, pieces, textarea, garbageWell);
+    }
+
 }
 
 // Should that be inside a function?

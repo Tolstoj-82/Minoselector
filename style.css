@@ -325,15 +325,19 @@ body{
   cursor: pointer;
   width: 250px;
 }
-  
-  .dropdown::-ms-expand {
-    display: none;
-  }
-  
-  .dropdown option {
-    color: #333;
-    background-color: #fff;
-  }
+
+.dropdown.small{
+  width: 70px;
+}
+
+.dropdown::-ms-expand {
+  display: none;
+}
+
+.dropdown option {
+  color: #333;
+  background-color: #fff;
+}
 
 /************************************************************
  PIECE SEQUENCE

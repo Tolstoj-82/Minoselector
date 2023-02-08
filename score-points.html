@@ -1,0 +1,66 @@
+<html>
+  <head>
+    <style>
+      #myCanvas {
+        border: 1px solid black;
+      }
+    </style>
+  </head>
+  <body>
+    <canvas id="myCanvas" width="498" height="298"></canvas>
+    <script>
+      const linesP1 = [0, 4];
+      const scoresP1 = [0, 12000];
+      const linesP2 = [0, 6];
+      const scoresP2 = [0, 9000];
+
+      const canvas = document.getElementById("myCanvas");
+      const ctx = canvas.getContext("2d");
+
+      const maxWidth = 300;
+      const maxHeight = 100000;
+
+      // Draw X-axis and Y-axis
+      ctx.fillStyle = "black";
+      ctx.fillRect(0, canvas.height - 1, canvas.width, 1);
+      ctx.fillRect(0, 0, 1, canvas.height);
+
+      // Add labels to X-axis and Y-axis
+    /*  ctx.font = "12px Arial";
+      ctx.fillText("0", 0, canvas.height - 1);
+      ctx.fillText(maxWidth.toString(), canvas.width - 20, canvas.height - 1);
+      ctx.fillText("0", 0, canvas.height - (scoresP1[0] / maxHeight) * canvas.height - 1);
+      ctx.fillText(maxHeight.toString(), 0, canvas.height - (scoresP1[1] / maxHeight) * canvas.height - 30);
+*/
+      // Draw dots and line for P1 values
+      ctx.fillStyle = "red";
+      ctx.strokeStyle = "red";
+      for (let i = 0; i < linesP1.length; i++) {
+        let x = (linesP1[i] / maxWidth) * canvas.width + 1;
+        let y = canvas.height - (scoresP1[i] / maxHeight) * canvas.height - 1;
+        ctx.beginPath();
+        ctx.arc(x, y, 5, 0, 2 * Math.PI);
+        ctx.fill();
+      }
+      ctx.beginPath();
+      ctx.moveTo((linesP1[0] / maxWidth) * canvas.width + 1, canvas.height - (scoresP1[0] / maxHeight) * canvas.height - 1);
+      ctx.lineTo((linesP1[1] / maxWidth) * canvas.width + 1, canvas.height - (scoresP1[1] / maxHeight) * canvas.height - 1);
+      ctx.stroke();
+
+      // Draw dots and line for P2 values
+      ctx.fillStyle = "blue";
+      ctx.strokeStyle = "blue";
+      for (let i = 0; i < linesP2.length; i++) {
+        let x = (linesP2[i] / maxWidth) * canvas.width + 1;
+        let y = canvas.height - (scoresP2[i] / maxHeight) * canvas.height - 1;
+        ctx.beginPath();
+        ctx.arc(x, y, 5, 0, 2 * Math.PI);
+        ctx.fill();
+      }
+      ctx.beginPath();
+      ctx.moveTo((linesP2[0] / maxWidth) * canvas.width + 1, canvas.height - (scoresP2[0] / maxHeight) * canvas.height - 1);
+      ctx.lineTo((linesP2[1] / maxWidth) * canvas.width + 1, canvas.height - (scoresP2[1] / maxHeight) * canvas.height - 1);
+      ctx.stroke();
+    </script>
+  </body>
+</html>

@@ -14,7 +14,7 @@
       <div class="toast green" id="successImport">Your stack was successfully imported.</div>
       <p>
         <div class="tooltip-container">
-        <h1>Initial garbage customizer</h1>&nbsp;&nbsp;
+        <h1>Initial settings customizer</h1>&nbsp;&nbsp;
             <div class="tooltip"><img src="images/tooltip_w.png" id="tooltip-image"><span class="tooltiptext">
                 <p>Add custom garbage to the start of your 2-player game.</p>
                 <p>Select the mino types from the right grid and add them to the green cells of the left grid - This will be your initial playfield.</p>
@@ -45,7 +45,17 @@
         <div class="playfieldgrid">
           <ol id="selectable"></ol>
           <p>
-            <button onclick="copyText();" class="button">Copy data to clipboard</button>
+            <div class="SideBySide">
+              <select id="garbage-well" class="dropdown small">
+                <option value="">-</option>
+                <option value="0C">2</option>
+                <option value="18">4</option>
+                <option value="10">6</option>
+                <option value="08">8</option>
+                <option value="14">10</option>
+              </select>
+              <button onclick="copyText();" class="button">Copy data to clipboard</button>
+            </div>
           </p>
         </div>
         <div class="spacing">&nbsp;</div>
