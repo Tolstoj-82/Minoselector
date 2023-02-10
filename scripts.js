@@ -231,8 +231,8 @@ function updateCurrentConfiguration() {
     let well = document.querySelector("#garbage-well").value;
 
     let data = {};
-    if (pieces !== "") data["pieces"] = pieces;
     if (garbage !== "") data["garbage"] = garbage;
+    if (pieces !== "") data["pieces"] = pieces;
     if (well !== "") data["well"] = well;
 
     currentJSON = JSON.stringify(data);
