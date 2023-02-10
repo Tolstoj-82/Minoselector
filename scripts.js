@@ -5,8 +5,9 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 // TODOs
-// * {"garbage":"0123456789ABCDEF","pieces":"0123456789ABCDEF","well":"04"}
-// * getMinoList is called too often!
+// * maybe pass the JSON instead of adding it to the clipboard? Ask Toni
+// * Refactor the code! There is a lot to improve
+// * getCurrentConfiguration() is called too often!
 // * Make it responsive - e.g. change the minosize to 16 if the screen is too small
 // * make sure if ctrl is pressed, it adds minos regardless
 
@@ -17,6 +18,7 @@
 // global variables defines initial mino and empty mino
 var currentMino = "87";
 let emptyMino = "2F";
+let currentJSON; // stores the current configuration in the JSON format
 
 // do this, once all DOM elements have been loaded 
 document.addEventListener("DOMContentLoaded", function() {
@@ -31,14 +33,14 @@ document.addEventListener("DOMContentLoaded", function() {
 
 // when a garbage well is selected
 document.querySelector("#garbage-well").addEventListener("change", function() {
-  getMinoList();
+    getCurrentConfiguration();
 });
 
 // selected playfield to textarea
 document.getElementById("dropdown").addEventListener("change", function() {
-    var value = this.value.trim(); // remove leading and trailing spaces from value
-    document.getElementById("importCsv").value = ""; // empty the textarea
-    document.getElementById("importCsv").value += value + "\n"; // add selected value to textarea
+    var value = this.value.trim();
+    document.getElementById("importCsv").value = "";
+    document.getElementById("importCsv").value += value + "\n";
 });
 
 // Checkbox (check / uncheck)
@@ -120,8 +122,10 @@ function countMinoInRow(rowNumber) {
     }
     return minoCount;
 }
+
 // checks all rows (2 of 2)
 function checkAllRows(){
+    
     // check each row and make sure it's not full
     let nMino;
     let isFull = false;
@@ -158,14 +162,13 @@ function toggleColor(id, color) {
 function getDropdownOptions(){
     for (var i = 0; i < playfields.length; i++) {
         var item = playfields[i];
-        var splitArray = item.split("|");
-        var display = splitArray[0];
-        var value = splitArray[1];
-        if (splitArray.length > 2) value += " | " + splitArray[2];              
+        var display = item.name;
+        var value = JSON.stringify(item);
         var option = "<option value='" + value + "'>" + display + "</option>";
         document.getElementById("dropdown").innerHTML += option;
     }
 }
+
 
 // display a toast
 // if it is called because rows are full, it waits 10 seconds before it's called again
@@ -208,48 +211,37 @@ function getRandomMino(){
 }
 
 // add the mino list to the textarea
-function getMinoList() {
+function getCurrentConfiguration() {
+    let garbage = "";
     
-    let imageNames = "";
-    let sequence = "";
+    // get the garbage
     let stackCells = document.querySelectorAll(".stack");
     stackCells.forEach(function(cell) {
         let cellImage = cell.querySelector("img").src;
         let startIndex = cellImage.indexOf("green/") + 6;
         let endIndex = cellImage.indexOf(".png");
-        let imageName = cellImage.substring(startIndex, endIndex).toUpperCase();
-        imageNames += imageName + ",";
+        let newGarbage = cellImage.substring(startIndex, endIndex).toUpperCase();
+        garbage += newGarbage;
     });
     
-    // truncate the last comma
-    imageNames = imageNames.slice(0, -1);
+    // get the pieces
+    let pieces = getPieceSequence();
 
-    // also add the piece sequence
-    sequence = getPieceSequence();
-    if(sequence != "") imageNames += " | " + sequence;
-    
-    // this is a bit stupid... but let's leave it for now
-    let minoList = document.querySelector("#minoList");
+    // get the well
+    let well = document.querySelector("#garbage-well").value;
 
-    // if there is a garbage well selected, save it
-    var select = document.querySelector("#garbage-well");
-    var selectedOption = select.options[select.selectedIndex].value;
-    if (selectedOption !== ""){
-        imageNames += "(" + selectedOption + ")";
-    }
+    let data = {};
+    if (pieces !== "") data["pieces"] = pieces;
+    if (garbage !== "") data["garbage"] = garbage;
+    if (well !== "") data["well"] = well;
 
-    minoList.value = imageNames;
+    currentJSON = JSON.stringify(data);
 }
+
 
 // copy the textarea to the clipboard
 function copyText() {
-    let textarea = document.getElementById("minoList");
-    textarea.style.display = "block";
-    textarea.select();
-    document.execCommand("copy");
-    
-    // this can be commented out for debugging 
-    textarea.style.display = "none";
+    navigator.clipboard.writeText(currentJSON);
 
     // show the toast (minos copied)
     displayToast("minoAdded");
@@ -285,10 +277,10 @@ function addMatrix(){
             currentRow++;
         }
     }
-    getMinoList();
+    getCurrentConfiguration();
 }
 
-// import a CSV file (1 of 2)
+// import JSON file (1 of 2)
 function actualImport(values, pieces, textarea, garbageWell){
 
     // set the garbage well selector to ""
@@ -306,14 +298,14 @@ function actualImport(values, pieces, textarea, garbageWell){
         var img = div.getElementsByTagName("img")[0];
         img.src = "images/green/" + values[i] + ".png";
 
-        //div.classList.add("ui-selectee");
         if(values[i].toUpperCase() != emptyMino) div.classList.add("mino");
-        //else div.classList.remove("mino");
     }
+
     displayToast("successImport");
-    getMinoList();
+    getCurrentConfiguration();
     textarea.value = "";
     checkAllRows();
+    
     // removes the pieces to be generated
     removePieces();
     if(pieces != "") loadInPieceSequence(pieces);
@@ -330,48 +322,49 @@ function actualImport(values, pieces, textarea, garbageWell){
 
 }
 
-// import a CSV file (2 of 2)
-function csvToPlayfield(textarea) {
+// import a JSON file (2 of 2)
+function jsonToPlayfield(textarea) {
+    // Extract the content of the textarea
+    var dataString = textarea.value.trim();
 
-    // Split the csv data into an array of values
-    var pieces = "";
-    var data = textarea.value.trim();
+    // Parse the content as JSON
+    var data = JSON.parse(dataString);
 
-    // Check if data contains a garbage well and remove it
-    var garbageWell = "";
-    var garbageMatch = data.match(/\(([0-9]+)\)/);
-    if (garbageMatch) {
-    garbageWell = garbageMatch[1];
-    data = data.replace(garbageMatch[0], "");
+    // Extract the values and pieces from the data
+    var values = [];
+    var pieces = data.hasOwnProperty("pieces") ? data.pieces : "";
+    var garbage = data.hasOwnProperty("garbage") ? data.garbage : "";
+    var garbageWell = data.hasOwnProperty("well") ? data.well : "";
+
+    // Split the garbage string into 100 2-digit values
+    for (var i = 0; i < garbage.length; i += 2) {
+        values.push(garbage.substr(i, 2));
     }
 
-    var splitValues = data.split('|');
-
-    if (splitValues.length === 2) {
-    var values = splitValues[0].trim().split(',');
-    pieces = splitValues[1].trim();
-    } else {
-    values = data.trim().split(',');
+    // Check if the number of values is 100
+    if (values.length !== 100) {
+        displayToast("errorImport");
+        return;
     }
 
-    // Check if the number of values is 100 and if each value is a 2-digit hexadecimal number
-    if (values.length !== 100 || !values.every(val => /^[0-9A-F]{2}$/i.test(val.trim()))) {
-    displayToast("errorImport");
-    return;
+    // Check if each value is a 2-digit hexadecimal number
+    if (!values.every(val => /^[0-9A-F]{2}$/i.test(val.trim()))) {
+        displayToast("errorImport");
+        return;
     }
 
-    // also check if the piece sequence makes sense
+    // Check if the piece sequence makes sense
     var minoDivs = document.getElementsByClassName("mino");
     var gridRows = document.querySelectorAll("#piecesGrid tr");
     if (minoDivs.length > 0 || gridRows.length > 1){
-    var confirm = window.confirm("Your current playfield and piece sequence will be overwritten. Continue?");
-    if (confirm == true){
-        actualImport(values, pieces, textarea, garbageWell);
-    }
+        var confirm = window.confirm("Your current playfield and piece sequence will be overwritten. Continue?");
+        if (confirm == true){
+            actualImport(values, pieces, textarea, garbageWell);
+        }
     }else{
         actualImport(values, pieces, textarea, garbageWell);
     }
-
+    getCurrentConfiguration();
 }
 
 // Should that be inside a function?
@@ -424,7 +417,7 @@ $( function(){
             });
 
             // update the mino list
-            getMinoList(); 
+            getCurrentConfiguration(); 
             checkAllRows();
         }
     });  

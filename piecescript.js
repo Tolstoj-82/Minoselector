@@ -19,8 +19,10 @@ for (let i = 0; i < pieceTypes.length; i++) {
 
 // load in the piece sequence from the textarea
 function loadInPieceSequence(pieces){
-    splitPieces = pieces.trim().split(",");
+
+    const splitPieces = pieces.match(/.{1,2}/g);
     const decodedPieces = [];
+        
     for (let i = 0; i < splitPieces.length; i++) {
       const value = splitPieces[i];
       let decimalValue = parseInt(value, 16);
@@ -30,9 +32,9 @@ function loadInPieceSequence(pieces){
       let orientation = orientations[orientationIndex];
       decodedPieces.push(pieceType + orientation);
     }
-    //alert(decodedPieces);
-    //const piecesGrid = document.getElementById("piecesGrid");
+
     const table = document.getElementById("piecesGrid");
+    
     while (table.rows.length > 0) {
         table.deleteRow(0);
     }
@@ -73,7 +75,7 @@ function rotate(id) {
     }
     
     image.src = imgPath + newImageName + ".png";
-    getMinoList();
+    getCurrentConfiguration();
 }
 
 // letter to image tag, or vice versa
@@ -86,7 +88,7 @@ function swapLetterAndImage(value) {
         return "*";
     }else{
         // WHERE IS THAT EVEN USED? --> AT THE BEGINNING, WHICH IS WRONG ANYWAY
-        return `<img src="${imgPath}${value}.png" style="width:100%; height:100%;">`; ////////////////////////////
+        return `<img src="${imgPath}${value}.png" style="width:100%; height:100%;">`;
     }
   }
   
@@ -122,8 +124,8 @@ function getPieceSequence() {
         }
     }
 
-    let result = values.join(",");
-    return result.endsWith(",") ? result.slice(0, -1) : result;
+    let result = values.join("");
+    return result;
 }
 
 // adds a row to the pieces table
@@ -151,7 +153,7 @@ function addRowToTable(currentIndex, isAutomatic, imgData) {
     secondColumn.focus();
   
 
-    if (!isAutomatic) { //&& pieceTypes.includes(content)
+    if (!isAutomatic) {
         const lastSecondRow = document.getElementById(`piece-${currentIndex - 1}`).querySelector(".second-column");
         const content = lastSecondRow.textContent;    
         lastSecondRow.innerHTML = `<img src="${imgPath}${imgData}${content}.png" class="tetromino" id="img-${currentIndex - 1}" onclick="rotate('img-${currentIndex - 1}')">`;
@@ -184,7 +186,7 @@ function renumberRows() {
             }
           }
     }
-    getMinoList();
+    getCurrentConfiguration();
 }
 
 // when you click into the pieces grid...
@@ -202,7 +204,6 @@ piecesGrid.addEventListener("click", function(event) {
             const parentRow = target.parentNode;
             const parentRowId = parentRow.id;
             //delete a row
-            //if(confirm("Do you want to delete row " + parentRowId + "?")){...}
             let table = document.getElementById("piecesGrid");
             let rowToDelete = document.getElementById(parentRowId.toString());
             table.deleteRow(rowToDelete.rowIndex);
@@ -210,7 +211,7 @@ piecesGrid.addEventListener("click", function(event) {
         }
 
     }
-    getMinoList();
+    getCurrentConfiguration();
 });
 
 piecesGrid.addEventListener("keydown", function(event) {
@@ -225,7 +226,7 @@ piecesGrid.addEventListener("keydown", function(event) {
         if(lastRow > -1){
             table.deleteRow(lastRow);
             renumberRows();
-            getMinoList();
+            getCurrentConfiguration();
         }        
         return;
     }
@@ -246,7 +247,7 @@ piecesGrid.addEventListener("keydown", function(event) {
             if (!nextRow) {
                 // make this its own function
                 addRowToTable(currentIndex, false, "");
-                getMinoList();
+                getCurrentConfiguration();
                 
             } else {
                 nextRow.querySelector(".second-column").setAttribute("contenteditable", true);

@@ -1,0 +1,21 @@
+<html>
+  <head>
+    <script>
+      function generateCombinations() {
+        const letters = ['L', 'J', 'I', 'O', 'Z', 'S', 'T'];
+        let combinations = [];
+        for (let i = 0; i < letters.length; i++) {
+          for (let j = 0; j < letters.length; j++) {
+            for (let k = 0; k < letters.length; k++) {
+                combinations.push(letters[i] + letters[j] + letters[k]);
+            }
+          }
+        }
+        document.getElementById("combinations").innerHTML = combinations.join("<br>");
+      }
+    </script>
+  </head>
+  <body onload="generateCombinations()">
+    <div id="combinations"></div>
+  </body>
+</html>
