@@ -44,7 +44,7 @@ body{
   flex-direction: column;
 }
 
-#minolist, #importCsv{
+#importJSON{
   width:870px; 
   height:60px; 
 }

@@ -75,7 +75,7 @@ function rotate(id) {
     }
     
     image.src = imgPath + newImageName + ".png";
-    getCurrentConfiguration();
+    updateCurrentConfiguration();
 }
 
 // letter to image tag, or vice versa
@@ -186,7 +186,7 @@ function renumberRows() {
             }
           }
     }
-    getCurrentConfiguration();
+    updateCurrentConfiguration();
 }
 
 // when you click into the pieces grid...
@@ -211,7 +211,7 @@ piecesGrid.addEventListener("click", function(event) {
         }
 
     }
-    getCurrentConfiguration();
+    updateCurrentConfiguration();
 });
 
 piecesGrid.addEventListener("keydown", function(event) {
@@ -226,7 +226,7 @@ piecesGrid.addEventListener("keydown", function(event) {
         if(lastRow > -1){
             table.deleteRow(lastRow);
             renumberRows();
-            getCurrentConfiguration();
+            updateCurrentConfiguration();
         }        
         return;
     }
@@ -247,7 +247,7 @@ piecesGrid.addEventListener("keydown", function(event) {
             if (!nextRow) {
                 // make this its own function
                 addRowToTable(currentIndex, false, "");
-                getCurrentConfiguration();
+                updateCurrentConfiguration();
                 
             } else {
                 nextRow.querySelector(".second-column").setAttribute("contenteditable", true);
