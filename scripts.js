@@ -7,7 +7,7 @@
 // TODOs
 // * maybe pass the JSON instead of adding it to the clipboard? Ask Toni
 // * Refactor the code! There is a lot to improve
-// * getCurrentConfiguration() is called too often!
+// * updateCurrentConfiguration() is called too often!
 // * Make it responsive - e.g. change the minosize to 16 if the screen is too small
 // * make sure if ctrl is pressed, it adds minos regardless
 
@@ -33,14 +33,14 @@ document.addEventListener("DOMContentLoaded", function() {
 
 // when a garbage well is selected
 document.querySelector("#garbage-well").addEventListener("change", function() {
-    getCurrentConfiguration();
+    updateCurrentConfiguration();
 });
 
 // selected playfield to textarea
 document.getElementById("dropdown").addEventListener("change", function() {
     var value = this.value.trim();
-    document.getElementById("importCsv").value = "";
-    document.getElementById("importCsv").value += value + "\n";
+    document.getElementById("importJSON").value = "";
+    document.getElementById("importJSON").value += value + "\n";
 });
 
 // Checkbox (check / uncheck)
@@ -211,7 +211,7 @@ function getRandomMino(){
 }
 
 // add the mino list to the textarea
-function getCurrentConfiguration() {
+function updateCurrentConfiguration() {
     let garbage = "";
     
     // get the garbage
@@ -277,7 +277,7 @@ function addMatrix(){
             currentRow++;
         }
     }
-    getCurrentConfiguration();
+    updateCurrentConfiguration();
 }
 
 // import JSON file (1 of 2)
@@ -302,7 +302,7 @@ function actualImport(values, pieces, textarea, garbageWell){
     }
 
     displayToast("successImport");
-    getCurrentConfiguration();
+    updateCurrentConfiguration();
     textarea.value = "";
     checkAllRows();
     
@@ -364,7 +364,7 @@ function jsonToPlayfield(textarea) {
     }else{
         actualImport(values, pieces, textarea, garbageWell);
     }
-    getCurrentConfiguration();
+    updateCurrentConfiguration();
 }
 
 // Should that be inside a function?
@@ -417,7 +417,7 @@ $( function(){
             });
 
             // update the mino list
-            getCurrentConfiguration(); 
+            updateCurrentConfiguration(); 
             checkAllRows();
         }
     });  
