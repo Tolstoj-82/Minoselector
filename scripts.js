@@ -233,7 +233,7 @@ function updateCurrentConfiguration() {
     let data = {};
     if (garbage !== "") data["garbage"] = garbage;
     if (pieces !== "") data["pieces"] = pieces;
-    if (well !== "") data["well"] = well;
+    if (well !== "") data["well_column"] = well;
 
     currentJSON = JSON.stringify(data);
 }
@@ -334,7 +334,7 @@ function jsonToPlayfield(textarea) {
     var values = [];
     var pieces = data.hasOwnProperty("pieces") ? data.pieces : "";
     var garbage = data.hasOwnProperty("garbage") ? data.garbage : "";
-    var garbageWell = data.hasOwnProperty("well") ? data.well : "";
+    var garbageWell = data.hasOwnProperty("well_column") ? data.well_column : "";
 
     // Split the garbage string into 100 2-digit values
     for (var i = 0; i < garbage.length; i += 2) {
