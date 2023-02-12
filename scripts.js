@@ -261,7 +261,7 @@ function addMatrix(){
                 li.classList.add("noStack");
             }else{
                 let img = document.createElement("img");
-                img.src = "images/green/" + emptyMino + ".png";
+                img.src = "images/green/" + emptyMino.toUpperCase() + ".png";
                 li.appendChild(img);
                 li.classList.add("stack");
                 li.classList.add("row-"+(currentRow-8));
@@ -295,7 +295,7 @@ function actualImport(values, pieces, garbageWell){
     for (var i = 0; i < stackDivs.length; i++) {
         var div = stackDivs[i];
         var img = div.getElementsByTagName("img")[0];
-        img.src = "images/green/" + values[i] + ".png";
+        img.src = "images/green/" + values[i].toUpperCase() + ".png";
 
         if(values[i].toUpperCase() != emptyMino) div.classList.add("mino");
     }
@@ -367,7 +367,7 @@ function jsonToPlayfield() {
 // Should that be inside a function?
 // Create the VRAM Grid (right)
 for (let i = 0; i < 256; i++) {
-    let hexId = i.toString(16).padStart(2, "0");
+    let hexId = i.toString(16).padStart(2, "0").toUpperCase();
     let cell = document.createElement("div");
     cell.classList.add("cell");
     if(i >= 128 && i <= 135){
@@ -408,7 +408,7 @@ $( function(){
                         // make sure 2F is not treated as a mino
                         if(currentMino.toUpperCase() == emptyMino) this.classList.remove(mino);
                         else this.classList.add(mino);
-                        $(el).find('img').attr('src', 'images/green/' + currentMino + '.png');
+                        $(el).find('img').attr('src', 'images/green/' + currentMino.toUpperCase() + '.png');
                     }
                 }
             });
