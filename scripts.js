@@ -19,6 +19,7 @@
 var currentMino = "87";
 let emptyMino = "2F";
 let currentJSON; // stores the current configuration in the JSON format
+let importJSON; // stores the JSON to be imported
 
 // do this, once all DOM elements have been loaded 
 document.addEventListener("DOMContentLoaded", function() {
@@ -38,9 +39,7 @@ document.querySelector("#garbage-well").addEventListener("change", function() {
 
 // selected playfield to textarea
 document.getElementById("dropdown").addEventListener("change", function() {
-    var value = this.value.trim();
-    document.getElementById("importJSON").value = "";
-    document.getElementById("importJSON").value += value + "\n";
+    importJSON = this.value.trim();
 });
 
 // Checkbox (check / uncheck)
@@ -281,7 +280,7 @@ function addMatrix(){
 }
 
 // import JSON file (1 of 2)
-function actualImport(values, pieces, textarea, garbageWell){
+function actualImport(values, pieces, garbageWell){
 
     // set the garbage well selector to ""
     document.querySelector("#garbage-well").selectedIndex = 0;
@@ -303,7 +302,7 @@ function actualImport(values, pieces, textarea, garbageWell){
 
     displayToast("successImport");
     updateCurrentConfiguration();
-    textarea.value = "";
+    //importJSON = "";
     checkAllRows();
     
     // removes the pieces to be generated
@@ -323,12 +322,10 @@ function actualImport(values, pieces, textarea, garbageWell){
 }
 
 // import a JSON file (2 of 2)
-function jsonToPlayfield(textarea) {
-    // Extract the content of the textarea
-    var dataString = textarea.value.trim();
+function jsonToPlayfield() {
 
     // Parse the content as JSON
-    var data = JSON.parse(dataString);
+    var data = JSON.parse(importJSON);
 
     // Extract the values and pieces from the data
     var values = [];
@@ -359,10 +356,10 @@ function jsonToPlayfield(textarea) {
     if (minoDivs.length > 0 || gridRows.length > 1){
         var confirm = window.confirm("Your current playfield and piece sequence will be overwritten. Continue?");
         if (confirm == true){
-            actualImport(values, pieces, textarea, garbageWell);
+            actualImport(values, pieces, garbageWell);
         }
     }else{
-        actualImport(values, pieces, textarea, garbageWell);
+        actualImport(values, pieces, garbageWell);
     }
     updateCurrentConfiguration();
 }

@@ -7,7 +7,7 @@ body{
   background-color: #333;
   width: 100%;
   overflow-y: scroll;
-  margin-left: 20;
+  /*margin-left: 20;*/
   align-items: center;
 }
   
@@ -18,7 +18,8 @@ body{
 }
   
 .vramgrid {
-  width: 600px;
+  /*width: 600px;*/
+  width: fit-content;
 }
   
 .spacing {
@@ -44,29 +45,24 @@ body{
   flex-direction: column;
 }
 
-#importJSON{
-  width:870px; 
-  height:60px; 
-}
-
 /************************************************************
  VRAM GRID
 *************************************************************/
 .vramgrid {
     display: grid;    
-    grid-template-columns: repeat(16, 32px);
-    grid-template-rows: repeat(16, 32px);
+    grid-template-columns: repeat(16, 32px); /***************************************/
+    grid-template-rows: repeat(16, 32px); /***************************************/
     gap: 0px;
     width: fit-content;
     height: fit-content;
     border: 30px solid rgb(158, 210, 144);
-    border-radius: 50px;
+    border-radius: 20px; /************************************* 50 **/
     cursor: pointer;
 }
 
 .cell, .playfieldcell {
-    width: 32px;
-    height: 32px;
+    width: 32px; /***************************************/
+    height: 32px; /***************************************/
     border: 2px solid #999;
     background-size: cover;
     box-sizing: border-box;
@@ -188,7 +184,7 @@ body{
 
   #selectable .mino{
     background-repeat: no-repeat;
-    background-size: 32px 32px;
+    background-size: 32px 32px; /***************************************/
     background-image: url('images/green/2F.png');
   }
   
@@ -196,8 +192,8 @@ body{
     list-style-type: none;
     margin: 0;
     padding: 0;
-    width: 320px;
-    height: 576px;
+    width: 320px; /************************************** 320 */
+    height: 576px; /************************************** 576 */
     border: 3px solid rgb(255, 255, 255);
   }
   
@@ -205,8 +201,8 @@ body{
     margin: 0px;
     padding: 0px;
     float: left;
-    width: 32px;
-    height: 32px;
+    width: 32px; /***************************************/
+    height: 32px;/***************************************/
     box-sizing: border-box;
   }
   
@@ -250,8 +246,8 @@ body{
 .stack.clear::before {
     content: "";
     position: absolute;
-    width: 32px;
-    height: 32px;
+    width: 32px; /***************************************/
+    height: 32px; /***************************************/
     background-color: lightsalmon;
     opacity: 0.5; /* adjust the value to control the opacity */
   }
@@ -352,9 +348,7 @@ body{
 }
 
 #piecesGrid {
-    /*width: contain;*/
     border-collapse: collapse;
-    /*height: fit-content;*/
 }
 
 #piecesGrid td {
@@ -389,7 +383,6 @@ body{
   height:100%;
   position: relative;
   cursor: pointer;
-  /*transition: all 0.3s ease-in-out;*/
 }
 
 .tetromino:hover{

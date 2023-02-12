@@ -17,7 +17,7 @@ for (let i = 0; i < pieceTypes.length; i++) {
     }
   }
 
-// load in the piece sequence from the textarea
+// load in the piece sequence
 function loadInPieceSequence(pieces){
 
     const splitPieces = pieces.match(/.{1,2}/g);
@@ -203,6 +203,7 @@ piecesGrid.addEventListener("click", function(event) {
         if (target.innerHTML != "") {
             const parentRow = target.parentNode;
             const parentRowId = parentRow.id;
+            
             //delete a row
             let table = document.getElementById("piecesGrid");
             let rowToDelete = document.getElementById(parentRowId.toString());
