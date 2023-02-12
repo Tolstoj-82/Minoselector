@@ -302,7 +302,6 @@ function actualImport(values, pieces, garbageWell){
 
     displayToast("successImport");
     updateCurrentConfiguration();
-    //importJSON = "";
     checkAllRows();
     
     // removes the pieces to be generated

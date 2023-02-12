@@ -12,9 +12,15 @@
       <div class="toast red" id="rowsFull">There are full rows! These will be cleared immediately.</div>
       <div class="toast red" id="errorImport">The provided data does not seem to be valid. Make sure it consists of exactly 100 comma-seperated 2-digit hex values.</div>
       <div class="toast green" id="successImport">Your stack was successfully imported.</div>
+      <div class="toast red" id="illegalPiece">Only L,J,I,O,Z,S and T are valid pieces.</div>
       <p>
         <div class="tooltip-container">
-        <h1>Initial settings customizer</h1>&nbsp;&nbsp;
+          <div class="SideBySide">
+            <select id="dropdown" class="dropdown">
+              <option value="">--Chose a field--</option>            
+            </select>
+            <button onclick="jsonToPlayfield();" class="button">Load playfield</button>
+          </div>&nbsp;&nbsp;
             <div class="tooltip"><img src="images/tooltip_w.png" id="tooltip-image"><span class="tooltiptext">
                 <p>Add custom garbage, an initial piece sequence and define the garbage well to your 2-player game.</p>
                 <p>Select the mino types from the middle grid and add them to the green cells of the left grid - This will be your initial playfield.</p>
@@ -36,6 +42,7 @@
                   Only the top parts are rendered if you chose heights 1-4 and nothing is shown with height 0.<br>
                   If any row of your stack is full, it will clear immediately once the game starts.
               </p>
+              <p>TOLSTOJ 2023 (with some help of TONI, -JJ and ChatGPT)</p>
             </span>
           </div>
         </div>
@@ -82,19 +89,6 @@
               <button onclick="clearPieceSequence();" class="button">Clear Pieces</button>
           </p>
         </div>
-      </div>
- 
-      <div id="config-container">
-        <p>
-
-        </p> 
-          <div class="SideBySide">
-            <select id="dropdown" class="dropdown">
-              <option value="">--Chose a field--</option>            
-            </select>
-            <button onclick="jsonToPlayfield();" class="button">Load playfield</button>
-          </div>      
-        <p>TOLSTOJ 2023 (with some help of TONI, -JJ and ChatGPT)</p>
       </div>
     </div>
   </div>

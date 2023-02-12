@@ -2,7 +2,7 @@ const piecesGrid = document.querySelector("#piecesGrid");
 const pieceTypes = ["L", "J", "I", "O", "Z", "S", "T"];
 var currentIndex = 1;
 const imgPath = "images/tetrominos/";
-var warningShown = false;
+//var warningShown = false;
 
 // mapping for the pieces and orientations 
 const orientations = ["", "E", "S", "W"];
@@ -255,10 +255,8 @@ piecesGrid.addEventListener("keydown", function(event) {
                 nextRow.querySelector(".second-column").click();
             }
         } else {
-            if(!warningShown) alert("Only the letters L,J,I,O,Z,S or T are allowed!\n\nInfo: This message will not be shown again until you refresh the browser!");
-            warningShown = true;
             event.preventDefault();
-        
+            displayToast("illegalPiece");
         }
         if(currentIndex > 256){
             alert("There can only be 256 Tetrominoes!");
